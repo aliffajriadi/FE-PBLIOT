@@ -4,6 +4,11 @@ import React, { useState, useRef, useEffect } from 'react';
 // ============================================
 // OTP INPUT COMPONENT (4 boxes)
 // ============================================
+
+interface {
+  otp: String,
+  
+}
 const OtpInput = ({ otp, setOtp }) => {
   const inputRefs = [
     useRef(null),

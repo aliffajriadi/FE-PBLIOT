@@ -1,19 +1,47 @@
 "use client";
-import React, { useState } from 'react';
-import { Eye, EyeOff, ChevronDown } from 'lucide-react';
+import React, { useState, ChangeEvent, FormEvent } from "react";
+import { Eye, EyeOff, ChevronDown } from "lucide-react";
+import Image from "next/image";
+// ============================================
+// TYPE DEFINITIONS
+// ============================================
+
+interface InputFieldProps {
+  label: string;
+  type?: string;
+  placeholder?: string;
+  value: string;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  showPasswordToggle?: boolean;
+  onTogglePassword?: () => void;
+  showPassword?: boolean;
+}
+
+interface SelectFieldProps {
+  label: string;
+  value: string;
+  onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+  options: { value: string; label: string }[];
+}
+
+interface FormData {
+  loginAs: string;
+  nisn: string;
+  password: string;
+}
 
 // ============================================
-// INPUT FIELD COMPONENT (Reusable)
+// INPUT FIELD COMPONENT
 // ============================================
-const InputField = ({ 
-  label, 
-  type = "text", 
-  placeholder, 
-  value, 
-  onChange, 
+const InputField: React.FC<InputFieldProps> = ({
+  label,
+  type = "text",
+  placeholder,
+  value,
+  onChange,
   showPasswordToggle = false,
   onTogglePassword,
-  showPassword 
+  showPassword,
 }) => {
   return (
     <div className="mb-5">
@@ -22,7 +50,9 @@ const InputField = ({
       </label>
       <div className="relative">
         <input
-          type={showPasswordToggle ? (showPassword ? "text" : "password") : type}
+          type={
+            showPasswordToggle ? (showPassword ? "text" : "password") : type
+          }
           value={value}
           onChange={onChange}
           placeholder={placeholder}
@@ -49,7 +79,12 @@ const InputField = ({
 // ============================================
 // SELECT/DROPDOWN COMPONENT
 // ============================================
-const SelectField = ({ label, value, onChange, options }) => {
+const SelectField: React.FC<SelectFieldProps> = ({
+  label,
+  value,
+  onChange,
+  options,
+}) => {
   return (
     <div className="mb-5">
       <label className="block text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wide">
@@ -74,101 +109,72 @@ const SelectField = ({ label, value, onChange, options }) => {
 };
 
 // ============================================
-// LOGO COMPONENT
+// LOGIN FORM COMPONENT
 // ============================================
-const SmartPresenceLogo = () => {
-  return (
-    <div className="flex items-center justify-center mb-8">
-      <div className="flex items-center space-x-3">
-        {/* Logo SVG */}
-        <svg 
-          width="50" 
-          height="50" 
-          viewBox="0 0 50 50" 
-          fill="none" 
-          xmlns="http://www.w3.org/2000/svg"
-          className="text-[#2F4C87]"
-        >
-          <circle cx="13" cy="10" r="5" fill="currentColor" />
-          <circle cx="25" cy="10" r="5" fill="currentColor" />
-          <circle cx="37" cy="10" r="5" fill="currentColor" />
-          <path 
-            d="M13 18 C13 18, 15 25, 20 30 L20 45 C20 47, 18 47, 18 45 L18 32 C18 32, 15 27, 13 25 Z" 
-            fill="currentColor"
-          />
-          <path 
-            d="M25 18 C25 18, 28 35, 30 45 C30 47, 28 47, 28 45 C26 35, 23 18, 25 18 Z" 
-            fill="currentColor"
-          />
-        </svg>
-        
-        {/* Brand Name */}
-        <h1 className="text-2xl md:text-3xl font-bold text-[#2F4C87]">
-          Smart<span className="font-normal">Presence</span>
-        </h1>
-      </div>
-    </div>
-  );
-};
-
-// ============================================
-// LOGIN FORM COMPONENT (Main Form)
-// ============================================
-const LoginForm = () => {
-  const [formData, setFormData] = useState({
-    loginAs: 'SISWA',
-    nisn: '',
-    password: ''
+const LoginForm: React.FC = () => {
+  const [formData, setFormData] = useState<FormData>({
+    loginAs: "SISWA",
+    nisn: "",
+    password: "",
   });
-  const [showPassword, setShowPassword] = useState(false);
+  let isNullForm = false;
+  if (formData.nisn === "" || formData.password === "") {
+    isNullForm = true;
+  }
+
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const loginOptions = [
-    { value: 'SISWA', label: 'SISWA' },
-    { value: 'GURU', label: 'GURU' },
-    { value: 'ADMIN', label: 'ADMIN' }
+    { value: "SISWA", label: "SISWA", loginWith: "NISN" },
+    { value: "GURU", label: "GURU", loginWith: "NIP" },
+    { value: "ADMIN", label: "ADMIN", loginWith: "USERNAME" },
   ];
 
-  const handleInputChange = (field) => (e) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: e.target.value
-    }));
-  };
+  const handleInputChange =
+    (field: keyof FormData) =>
+    (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      setFormData((prev) => ({
+        ...prev,
+        [field]: e.target.value,
+      }));
+    };
 
-  const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  try {
-    const response = await fetch("http://0.0.0.0:3000/api/auth/login", { // ganti sesuai port backend
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+    try {
+      const response = await fetch("http://0.0.0.0:3000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (response.ok) {
-      alert(`Login berhasil sebagai ${data.role}`);
-      // Bisa redirect ke dashboard misalnya
-      // router.push("/dashboard");
-    } else {
-      alert(`Login gagal: ${data.message}`);
+      if (response.ok) {
+        alert(`Login berhasil sebagai ${data.role}`);
+      } else {
+        alert(`Login gagal: ${data.message}`);
+      }
+    } catch (error) {
+      console.error("Error saat login:", error);
+      alert("Terjadi kesalahan, coba lagi nanti.");
     }
-  } catch (error) {
-    console.error("Error saat login:", error);
-    alert("Terjadi kesalahan, coba lagi nanti.");
-  }
-};
+  };
 
   return (
     <div className="w-full max-w-md mx-auto px-4">
       <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-10">
-        {/* Logo */}
-        <SmartPresenceLogo />
+        <Image
+          className="mx-auto mb-5"
+          src="/LOGO.png"
+          alt="Logo SmartPresence"
+          width={250}
+          height={250}
+        />
 
-        {/* Form Title */}
         <div className="text-center mb-8">
           <h2 className="text-2xl md:text-3xl font-medium text-[#2F4C87] mb-2">
             Masuk ke Dashboard
@@ -178,54 +184,66 @@ const LoginForm = () => {
           </p>
         </div>
 
-        {/* Login Form */}
-        <div>
-          {/* Login As Dropdown */}
+        <form onSubmit={handleSubmit}>
           <SelectField
             label="LOGIN SEBAGAI"
             value={formData.loginAs}
-            onChange={handleInputChange('loginAs')}
+            onChange={handleInputChange("loginAs")}
             options={loginOptions}
           />
 
-          {/* NISN/NIP Input */}
           <InputField
-            label="NISN/NIP"
+            label={
+              formData.loginAs === "SISWA"
+                ? "NISN"
+                : formData.loginAs === "GURU"
+                ? "NIP"
+                : "USERNAME"
+            }
             type="text"
-            placeholder="Masukkan NISN atau NIP Anda"
+            placeholder={
+              formData.loginAs === "SISWA"
+                ? "Masukkan NISN Anda"
+                : formData.loginAs === "GURU"
+                ? "Masukkan NIP Anda"
+                : "Masukkan Username Anda"
+            }
             value={formData.nisn}
-            onChange={handleInputChange('nisn')}
+            onChange={handleInputChange("nisn")}
           />
 
-          {/* Password Input */}
           <InputField
             label="Password"
             placeholder="Masukkan password Anda"
             value={formData.password}
-            onChange={handleInputChange('password')}
+            onChange={handleInputChange("password")}
             showPasswordToggle={true}
             showPassword={showPassword}
             onTogglePassword={() => setShowPassword(!showPassword)}
           />
 
-          {/* Forgot Password Link */}
           <div className="text-right mb-6">
-            <a 
-              href="/lupa-password" 
+            <a
+              href="/lupa-password"
               className="text-sm text-gray-600 hover:text-[#2F4C87] transition-colors font-medium"
             >
               Lupa password?
             </a>
           </div>
 
-          {/* Submit Button */}
           <button
-            onClick={handleSubmit}
-            className="w-full bg-[#2F4C87] text-white py-3.5 rounded-lg font-semibold text-lg hover:bg-[#253a6a] transform hover:-translate-y-0.5 transition-all duration-200 shadow-md hover:shadow-xl"
+            type="submit"
+            disabled={isNullForm}
+            className={`w-full bg-[#2F4C87] text-white py-3.5 rounded-lg font-semibold text-lg transform transition-all duration-200 shadow-md hover:shadow-xl 
+    ${
+      !formData.nisn || !formData.password
+        ? "opacity-50 cursor-not-allowed"
+        : "hover:bg-[#253a6a] hover:-translate-y-0.5"
+    }`}
           >
             Masuk
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );
@@ -234,28 +252,26 @@ const LoginForm = () => {
 // ============================================
 // MAIN PAGE COMPONENT
 // ============================================
-export default function LoginPage() {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-blue-50 to-indigo-100 flex flex-col">
-      <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-        
-        * {
-          font-family: 'Poppins', sans-serif;
-        }
-      `}</style>
+const LoginPage: React.FC = () => (
+  <div className="min-h-screen bg-gradient-to-br from-blue-100 via-blue-50 to-indigo-100 flex flex-col">
+    <style jsx global>{`
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex items-center justify-center py-12">
-        <LoginForm />
-      </div>
+      * {
+        font-family: "Poppins", sans-serif;
+      }
+    `}</style>
 
-      {/* Footer Text */}
-      <footer className="text-center pb-8">
-        <p className="text-[#2F4C87] font-semibold text-lg">
-          Smart System for School Attendance Needs.
-        </p>
-      </footer>
+    <div className="flex-1 flex items-center justify-center py-12">
+      <LoginForm />
     </div>
-  );
-}
+
+    <footer className="text-center pb-8">
+      <p className="text-[#2F4C87] font-semibold text-lg">
+        Smart System for School Attendance Needs.
+      </p>
+    </footer>
+  </div>
+);
+
+export default LoginPage;
