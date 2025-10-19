@@ -117,6 +117,17 @@
   font-family: 'Poppins', sans-serif !important;
 }
 
+[data-sonner-toast][data-type="success"] {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+[data-sonner-toast][data-type="error"] {
+  background-color: var(--destructive);
+  color: var(--destructive-foreground);
+}
+
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
