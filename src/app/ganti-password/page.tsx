@@ -33,13 +33,6 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-blue-50 to-indigo-100 flex flex-col">
-      <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-        
-        * {
-          font-family: 'Poppins', sans-serif;
-        }
-      `}</style>
 
       {/* Main Content */}
       <div className="flex-1 flex items-center justify-center py-12">
