@@ -6,6 +6,7 @@ import { InputFieldProps, SelectFieldProps, FormData } from "@/types/login";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useLoading } from "@/components/LoadingContext";
 // ============================================
 // INPUT FIELD COMPONENT
 // ============================================
@@ -88,6 +89,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
 // LOGIN FORM COMPONENT
 // ============================================
 const LoginForm: React.FC = () => {
+  const { showLoading, hideLoading } = useLoading();
   const [formData, setFormData] = useState<FormData>({
     loginAs: "SISWA",
     nisn: "",
@@ -118,8 +120,10 @@ const LoginForm: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    showLoading();
+
     try {
-      const response = await fetch("http://0.0.0.0:3000/api/auth/login", {
+      const response = await fetch("https://api.aliffajriasdi.my.id/wa/send-message", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -136,6 +140,8 @@ const LoginForm: React.FC = () => {
       }
     } catch (error) {
       toast.error("Terjadi kesalahan saat login.");
+    } finally {
+      hideLoading();
     }
   };
 

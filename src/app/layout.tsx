@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import { LoadingProvider } from "@/components/LoadingContext";
 
 //FONTS GLOBAL
 const poppins = Poppins({
@@ -25,8 +26,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.className} antialiased`}>
-        <main>{children}</main>
-        <Toaster position="top-right" toastOptions={{ duration: 5000 }} />
+        <LoadingProvider>
+          <main>{children}</main>
+          <Toaster position="top-right" toastOptions={{ duration: 5000 }} />
+        </LoadingProvider>
       </body>
     </html>
   );

@@ -1,5 +1,5 @@
+"use client"
 import LoginForm from "./component/FormLogin";
-
 
 const LoginPage: React.FC = () => (
   <div className="min-h-screen bg-gradient-to-br from-blue-100 via-blue-50 to-indigo-100 flex flex-col">

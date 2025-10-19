@@ -47,7 +47,7 @@ export const OtpInput: React.FC<OtpInputProps> = ({ otp, setOtp }) => {
           onChange={(e) => handleChange(index, e.target.value)}
           onKeyDown={(e) => handleKeyDown(index, e)}
           onPaste={handlePaste}
-          className="w-14 h-14 sm:w-16 sm:h-16 text-center text-2xl sm:text-3xl text-primary font-bold bg-gray-100 border-none rounded-xl text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all duration-200 uppercase"
+          className="w-14 h-14 sm:w-16 sm:h-16 text-center text-2xl sm:text-3xl text-primary font-bold bg-gray-100 border-none rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all duration-200 uppercase"
         />
       ))}
     </div>

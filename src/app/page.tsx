@@ -71,7 +71,7 @@ const Hero = () => {
         <div className="absolute top-40 right-10 w-72 h-72 bg-teal-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
         <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
       </div>
-
+      
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className="text-center lg:text-left space-y-6 animate-fade-in-up">
