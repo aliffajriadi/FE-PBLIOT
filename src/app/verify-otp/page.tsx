@@ -7,19 +7,19 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { MoveLeft } from "lucide-react";
 import { toast } from "sonner";
+import { useLoading } from "@/components/LoadingContext";
 
 export default function OtpVerificationPage() {
   const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
   const [countdown, setCountdown] = useState(180);
   const [canResend, setCanResend] = useState(false);
   const [isNullForm, setIsNullForm] = useState(true);
+  const { showLoading, hideLoading } = useLoading();
 
-  // Update isNullForm setiap kali otp berubah
   useEffect(() => {
     setIsNullForm(otp.some((digit) => digit === ""));
   }, [otp]);
 
-  // Countdown effect
   useEffect(() => {
     if (countdown > 0) {
       const timer = setInterval(() => setCountdown((prev) => prev - 1), 1000);
@@ -29,12 +29,16 @@ export default function OtpVerificationPage() {
     }
   }, [countdown]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const otpCode = otp.join("");
     if (otpCode.length !== 4) {
       toast.error("Mohon lengkapi semua digit OTP!");
       return;
     }
+    //BUAT SIMULASI DOANG LEK, NNTI GANTI KE API NYA
+    showLoading();
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    hideLoading();
     toast.info(`Kode OTP yang dimasukkan: ${otpCode}\n\nVerifikasi berhasil!`);
     setOtp(["", "", "", ""]);
   };
@@ -92,7 +96,11 @@ export default function OtpVerificationPage() {
               </button>
 
               <div className="text-center mt-6">
-                <Button variant="link" asChild><Link href="/login"><MoveLeft/> Kembali ke halaman login</Link></Button>
+                <Button variant="link" asChild>
+                  <Link href="/login">
+                    <MoveLeft /> Kembali ke halaman login
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>
