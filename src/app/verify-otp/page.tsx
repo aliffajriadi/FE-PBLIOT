@@ -6,10 +6,11 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { MoveLeft } from "lucide-react";
+import { toast } from "sonner";
 
 export default function OtpVerificationPage() {
   const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
-  const [countdown, setCountdown] = useState(60);
+  const [countdown, setCountdown] = useState(180);
   const [canResend, setCanResend] = useState(false);
   const [isNullForm, setIsNullForm] = useState(true);
 
@@ -31,16 +32,16 @@ export default function OtpVerificationPage() {
   const handleSubmit = () => {
     const otpCode = otp.join("");
     if (otpCode.length !== 4) {
-      alert("Mohon lengkapi semua digit OTP!");
+      toast.error("Mohon lengkapi semua digit OTP!");
       return;
     }
-    alert(`Kode OTP yang dimasukkan: ${otpCode}\n\nVerifikasi berhasil!`);
+    toast.info(`Kode OTP yang dimasukkan: ${otpCode}\n\nVerifikasi berhasil!`);
     setOtp(["", "", "", ""]);
   };
 
   const handleResendOtp = () => {
     if (canResend) {
-      alert("Kode OTP baru telah dikirim ke WhatsApp Anda!");
+      toast.success("Kode OTP baru telah dikirim ke WhatsApp Anda!");
       setCountdown(180);
       setCanResend(false);
       setOtp(["", "", "", ""]);
