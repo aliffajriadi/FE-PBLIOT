@@ -24,8 +24,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     { label: "Dashboard", icon: LayoutDashboard, href: "/admin/dashboard" },
     { label: "Data Kelas", icon: Building2, href: "/admin/Datakelas" },
     { label: "Data Guru", icon: GraduationCap, href: "/admin/Dataguru" },
-    { label: "Data Siswa", icon: Users, href: "/admin/siswa" },
-    { label: "Laporan Absensi", icon: Calendar, href: "/admin/absensi" },
+    { label: "Data Siswa", icon: Users, href: "/admin/DataSiswa" },
+    { label: "Laporan Absensi", icon: Calendar, href: "/admin/laporan" },
     { label: "Pengaturan", icon: Settings, href: "/admin/settings" },
   ];
 
