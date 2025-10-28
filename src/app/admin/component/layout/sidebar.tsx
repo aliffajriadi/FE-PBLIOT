@@ -21,10 +21,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const pathname = usePathname();
 
   const menuItems = [
-    { label: "Dashboard", icon: LayoutDashboard, href: "/admin/dashboard" },
-    { label: "Data Kelas", icon: Building2, href: "/admin/Datakelas" },
-    { label: "Data Guru", icon: GraduationCap, href: "/admin/Dataguru" },
-    { label: "Data Siswa", icon: Users, href: "/admin/DataSiswa" },
+    { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
+    { label: "Data Kelas", icon: Building2, href: "/admin/data-kelas" },
+    { label: "Data Guru", icon: GraduationCap, href: "/admin/data-guru" },
+    { label: "Data Siswa", icon: Users, href: "/admin/data-siswa" },
     { label: "Laporan Absensi", icon: Calendar, href: "/admin/laporan" },
     { label: "Pengaturan", icon: Settings, href: "/admin/settings" },
   ];

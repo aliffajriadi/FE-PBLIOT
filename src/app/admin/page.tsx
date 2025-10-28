@@ -1,10 +1,10 @@
 'use client';
 
-import AdminLayout from '../component/layout/AdminLayout';
-import SummaryCards from '../component/dashboard/SummaryCards';
-import AttendanceChart from '../component/dashboard/AttendanceChart';
-import RecentActivity from '../component/dashboard/RecentActivity';
-import QuickActions from '../component/dashboard/QuickActions';
+import AdminLayout from './component/layout/AdminLayout';
+import SummaryCards from './component/dashboard/SummaryCards';
+import AttendanceChart from './component/dashboard/AttendanceChart';
+import RecentActivity from './component/dashboard/RecentActivity';
+import QuickActions from './component/dashboard/QuickActions';
 const DashboardAdminPage = () => {
   return (
     <AdminLayout>
