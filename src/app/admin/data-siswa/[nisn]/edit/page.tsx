@@ -68,7 +68,6 @@ export default function EditSiswaPage({ params }: EditSiswaPageProps) {
           <span className="font-medium">Kembali</span>
         </button>
         <h1 className="text-2xl font-bold text-gray-800">Edit Data Siswa</h1>
-        <p className="text-gray-600 mt-1">NISN Siswa: {Siswa.nisn}</p>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">

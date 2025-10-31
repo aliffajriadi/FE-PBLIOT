@@ -81,13 +81,13 @@ export default function SiswaForm({ mode, initialData }: SiswaFormProps) {
       console.log('Form submitted:', formData);
       // TODO: Send data to API
       
-      // Redirect back to teachers page
-      router.push('/admin/DataSiswa');
+      // Redirect back to siswa page
+      router.push('/admin/data-siswa');
     }, 1000);
   };
 
   const handleCancel = () => {
-    router.push('/admin/DataSiswa');
+    router.push('/admin/data-siswa');
   };
 
   const handleChange = (

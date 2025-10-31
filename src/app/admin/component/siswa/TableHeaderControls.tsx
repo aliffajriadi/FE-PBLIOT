@@ -9,7 +9,7 @@ export default function TableHeaderControls() {
   const router = useRouter();
 
   const handleAddSiswa = () => {
-    router.push('/admin/DataSiswa/add');
+    router.push('/admin/data-siswa/add');
   };
 
   return (

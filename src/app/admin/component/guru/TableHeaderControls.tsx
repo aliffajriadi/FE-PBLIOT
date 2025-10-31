@@ -9,7 +9,7 @@ export default function TableHeaderControls() {
   const router = useRouter();
 
   const handleAddTeacher = () => {
-    router.push('/admin/Dataguru/add');
+    router.push('/admin/data-guru/add');
   };
 
   return (

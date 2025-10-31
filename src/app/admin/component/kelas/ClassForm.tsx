@@ -73,12 +73,12 @@ export default function ClassForm() {
       // TODO: Send data to API
       
       // Redirect back to classes page
-      router.push('/admin/Datakelas');
+      router.push('/admin/data-kelas');
     }, 1000);
   };
 
   const handleCancel = () => {
-    router.push('/admin/Datakelas');
+    router.push('/admin/data-kelas');
   };
 
   const handleChange = (

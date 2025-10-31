@@ -8,7 +8,7 @@ export default function TeachersTable() {
   const router = useRouter();
 
   const handleEdit = (nisn: string) => {
-    router.push(`/admin/DataSiswa/${nisn}/edit`);
+    router.push(`/admin/data-siswa/${nisn}/edit`);
   };
 
   const handleDelete = (nisn: string) => {

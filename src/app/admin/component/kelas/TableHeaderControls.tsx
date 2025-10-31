@@ -9,7 +9,7 @@ export default function TableHeaderControls() {
   const router = useRouter();
 
   const handleAddClass = () => {
-    router.push('/admin/Datakelas/add');
+    router.push('/admin/data-kelas/add');
   };
 
   return (

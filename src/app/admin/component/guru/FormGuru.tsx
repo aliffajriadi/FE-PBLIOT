@@ -83,12 +83,12 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
       // TODO: Send data to API
       
       // Redirect back to teachers page
-      router.push('/admin/Dataguru');
+      router.push('/admin/data-guru');
     }, 1000);
   };
 
   const handleCancel = () => {
-    router.push('/admin/Dataguru');
+    router.push('/admin/data-guru');
   };
 
   const handleChange = (

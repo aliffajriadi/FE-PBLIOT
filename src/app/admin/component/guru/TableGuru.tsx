@@ -8,7 +8,7 @@ export default function TeachersTable() {
   const router = useRouter();
 
   const handleEdit = (id: string) => {
-    router.push(`/admin/Dataguru/${id}/edit`);
+    router.push(`/admin/data-guru/${id}/edit`);
   };
 
   const handleDelete = (id: string) => {
