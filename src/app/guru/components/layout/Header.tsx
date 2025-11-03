@@ -19,14 +19,13 @@ export default function Header({ children }: GuruLayoutProps) {
       <div className="lg:ml-72">
         {/* Header */}
         <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-30">
-          <div className="px-6 py-4 flex items-center justify-between">
+          <div className="px-6 py-4 flex items-center md:justify-end justify-between">
             <button
               onClick={() => setSidebarOpen(true)}
               className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <Menu className="w-6 h-6 text-gray-600" />
             </button>
-            <h1 className="text-2xl font-bold text-gray-800 hidden lg:block">Dashboard</h1>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-3">
                 <span className="text-sm font-medium text-gray-700 hidden sm:block">Guru</span>
@@ -40,7 +39,6 @@ export default function Header({ children }: GuruLayoutProps) {
 
         {/* Page Content */}
         <main className="p-6 lg:p-8">
-          <h1 className="text-2xl font-bold text-gray-800 mb-6 lg:hidden">Dashboard</h1>
           {children}
         </main>
       </div>

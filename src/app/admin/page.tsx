@@ -1,5 +1,3 @@
-'use client';
-
 import AdminLayout from './component/layout/AdminLayout';
 import SummaryCards from './component/dashboard/SummaryCards';
 import AttendanceChart from './component/dashboard/AttendanceChart';
