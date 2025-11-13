@@ -1,6 +1,6 @@
 "use client";
 
-import Header from "./components/layout/Header";
+import Header from "./components/layout/layout";
 import RingkasanHariIni from "./components/dashboard/RingkasanHariIni";
 import JadwalHariIni from "./components/dashboard/JadwalHariIni";
 import StatistikKehadiran from "./components/dashboard/StatistikKehadiran";

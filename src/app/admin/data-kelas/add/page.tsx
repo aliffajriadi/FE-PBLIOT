@@ -1,6 +1,6 @@
 'use client';
 
-import AdminLayout from '../../component/layout/AdminLayout';
+import AdminLayout from '../../component/layout/Layout';
 import ClassForm from '../../component/kelas/ClassForm';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';

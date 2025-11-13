@@ -1,6 +1,6 @@
 'use client';
 
-import AdminLayout from '../component/layout/AdminLayout';
+import AdminLayout from '../component/layout/Layout';
 import TeachersTable from '../component/guru/TableGuru';
 import TableHeaderControls from '../component/guru/TableHeaderControls';
 

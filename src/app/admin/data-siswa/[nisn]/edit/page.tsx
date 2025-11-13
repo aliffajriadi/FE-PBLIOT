@@ -1,6 +1,6 @@
 'use client';
 
-import AdminLayout from '../../../component/layout/AdminLayout';
+import AdminLayout from '../../../component/layout/Layout';
 import SiswaForm from '../../../component/siswa/FormSiswa';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';

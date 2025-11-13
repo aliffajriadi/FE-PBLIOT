@@ -1,6 +1,6 @@
 'use client';
 
-import AdminLayout from '../component/layout/AdminLayout';
+import AdminLayout from '../component/layout/Layout';
 import SiswaTable from '../component/siswa/TableSiswa';
 import TableHeaderControls from '../component/siswa/TableHeaderControls';
 

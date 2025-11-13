@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import RingkasanKehadiran from "../components/riwayat/RingkasanKehadiran";
 import FilterBulan from "../components/riwayat/FilterBulan";
 import TableAbsensiSiswa from "../components/riwayat/TableAbsensiSiswa";
-import Header from "../components/layout/Header";
+import Header from "../components/layout/layout";
 
 // --- DATA DUMMY ---
 const absensiData = [

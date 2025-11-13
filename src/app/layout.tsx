@@ -4,7 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { LoadingProvider } from "@/components/LoadingContext";
 
-//FONTS GLOBAL
+// FONTS GLOBAL
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
@@ -28,7 +28,19 @@ export default function RootLayout({
       <body className={`${poppins.className} antialiased`}>
         <LoadingProvider>
           <main>{children}</main>
-          <Toaster position="top-right" toastOptions={{ duration: 5000 }} />
+
+          <Toaster
+            position="top-right"
+            richColors
+            toastOptions={{
+              duration: 5000,
+              style: {
+                borderRadius: "8px",
+                fontWeight: "500",
+              },
+            }}
+          />
+
         </LoadingProvider>
       </body>
     </html>

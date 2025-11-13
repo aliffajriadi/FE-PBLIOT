@@ -1,4 +1,4 @@
-import AdminLayout from './component/layout/AdminLayout';
+import AdminLayout from './component/layout/Layout';
 import SummaryCards from './component/dashboard/SummaryCards';
 import AttendanceChart from './component/dashboard/AttendanceChart';
 import RecentActivity from './component/dashboard/RecentActivity';

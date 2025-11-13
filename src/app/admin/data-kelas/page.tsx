@@ -1,6 +1,6 @@
 'use client';
 
-import AdminLayout from '../component/layout/AdminLayout';
+import AdminLayout from '../component/layout/Layout';
 import ClassesTable from '../component/kelas/ClassesTable';
 import TableHeaderControls from '../component/kelas/TableHeaderControls';
 

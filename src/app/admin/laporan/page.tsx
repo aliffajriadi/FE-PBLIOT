@@ -5,7 +5,7 @@ import LaporanGeneratorForm from '../component/laporan/LaporanGeneratorForm';
 import LaporanSummaryCards from '../component/laporan/LaporanSummaryCard';
 import LaporanDetailTable from '../component/laporan/LaporanDetailTable';
 import { LaporanData, LaporanFormData, DetailAbsensi } from '@/types/laporan';
-import AdminLayout from '../component/layout/AdminLayout';
+import AdminLayout from '../component/layout/Layout';
 // Data dummy untuk simulasi
 const generateDummyData = (formData: LaporanFormData): LaporanData => {
   // Simulasi data berdasarkan form input
