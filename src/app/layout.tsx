@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { LoadingProvider } from "@/components/LoadingContext";
+import Providers from "@/app/providers";
 
 // FONTS GLOBAL
 const poppins = Poppins({
@@ -26,22 +27,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.className} antialiased`}>
-        <LoadingProvider>
-          <main>{children}</main>
-
-          <Toaster
-            position="top-right"
-            richColors
-            toastOptions={{
-              duration: 5000,
-              style: {
-                borderRadius: "8px",
-                fontWeight: "500",
-              },
-            }}
-          />
-
-        </LoadingProvider>
+        <Providers>
+          <LoadingProvider>
+            <main>{children}</main>
+            <Toaster
+              position="top-right"
+              richColors
+              toastOptions={{
+                duration: 5000,
+                style: {
+                  borderRadius: "8px",
+                  fontWeight: "500",
+                },
+              }}
+              />
+          </LoadingProvider>
+        </Providers>
       </body>
     </html>
   );

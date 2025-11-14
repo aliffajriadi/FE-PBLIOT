@@ -2,11 +2,15 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { Eye, EyeOff, ChevronDown } from "lucide-react";
 import Image from "next/image";
-import { InputFieldProps, SelectFieldProps, FormData } from "@/types/login";
+import { InputFieldProps, SelectFieldProps, FormData, LoginPayload } from "@/types/login";
+import { useMutation } from "@tanstack/react-query";
+import { LoginRequest } from "@/lib/api";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useLoading } from "@/components/LoadingContext";
+import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
+
 // ============================================
 // INPUT FIELD COMPONENT
 // ============================================
@@ -27,9 +31,7 @@ const InputField: React.FC<InputFieldProps> = ({
       </label>
       <div className="relative">
         <input
-          type={
-            showPasswordToggle ? (showPassword ? "text" : "password") : type
-          }
+          type={showPasswordToggle ? (showPassword ? "text" : "password") : type}
           value={value}
           onChange={onChange}
           placeholder={placeholder}
@@ -41,11 +43,7 @@ const InputField: React.FC<InputFieldProps> = ({
             onClick={onTogglePassword}
             className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
           >
-            {showPassword ? (
-              <EyeOff className="w-5 h-5" />
-            ) : (
-              <Eye className="w-5 h-5" />
-            )}
+            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
           </button>
         )}
       </div>
@@ -56,12 +54,7 @@ const InputField: React.FC<InputFieldProps> = ({
 // ============================================
 // SELECT/DROPDOWN COMPONENT
 // ============================================
-const SelectField: React.FC<SelectFieldProps> = ({
-  label,
-  value,
-  onChange,
-  options,
-}) => {
+const SelectField: React.FC<SelectFieldProps> = ({ label, value, onChange, options }) => {
   return (
     <div className="mb-5">
       <label className="block text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wide">
@@ -89,18 +82,15 @@ const SelectField: React.FC<SelectFieldProps> = ({
 // LOGIN FORM COMPONENT
 // ============================================
 const LoginForm: React.FC = () => {
-  const { showLoading, hideLoading } = useLoading();
   const [formData, setFormData] = useState<FormData>({
     loginAs: "SISWA",
     nisn: "",
+    username: "",
     password: "",
   });
-  let isNullForm = false;
-  if (formData.nisn === "" || formData.password === "") {
-    isNullForm = true;
-  }
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const router = useRouter();
 
   const loginOptions = [
     { value: "SISWA", label: "SISWA", loginWith: "NOMOR INDUK SISWA" },
@@ -117,52 +107,68 @@ const LoginForm: React.FC = () => {
       }));
     };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  // ======================
+  // React Query Mutation
+  // ======================
+  const mutation = useMutation({
+    mutationFn: (payload: LoginPayload) => LoginRequest(payload),
+    onSuccess: (user) => {
+  if (!user) {
+    toast.error("Data user tidak ditemukan!");
+    return;
+  }
+
+  const role = user.role.toLowerCase();
+  toast.success(`Login berhasil! ${role.toUpperCase()}`);
+
+  if (role === "admin") router.push("/admin");
+  else if (role === "guru") router.push("/guru");
+  else router.push("/siswa");
+},
+
+    onError: (error: unknown) => {
+      const err = error as AxiosError<{ message: string }>;
+      console.log("Login error response:", err.response?.data);
+      toast.error(err.response?.data?.message ?? err.message ?? "Gagal login");
+    },
+  });
+
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    showLoading();
+    const payload: LoginPayload = {
+      role: formData.loginAs.toLowerCase(),
+      password: formData.password,
+    };
 
-    try {
-      const response = await fetch("https://api.aliffajriasdi.my.id/wa/send-message", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert(`Login berhasil sebagai ${data.role}`);
-      } else {
-        alert(`Login gagal: ${data.message}`);
-      }
-    } catch (error) {
-      toast.error("Terjadi kesalahan saat login.");
-    } finally {
-      hideLoading();
+    if (formData.loginAs === "SISWA" || formData.loginAs === "GURU") {
+      payload.identifier = formData.nisn;
+    } else if (formData.loginAs === "ADMIN") {
+      payload.name = formData.nisn;
     }
+
+    console.log("Login payload:", payload);
+    mutation.mutate(payload);
   };
+
+  const isFormEmpty = !formData.nisn || !formData.password;
 
   return (
     <div className="w-full max-w-md mx-auto px-4">
       <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-10">
         <Image
-          className="mx-auto mb-5"
           src="/LOGO.png"
           alt="Logo SmartPresence"
           width={250}
           height={250}
+          priority
         />
 
         <div className="text-center mb-8">
           <h2 className="text-2xl md:text-3xl font-medium text-[#2F4C87] mb-2">
             Masuk ke Dashboard
           </h2>
-          <p className="text-sm text-gray-500">
-            Monitoring Absensi Siswa dan Guru
-          </p>
+          <p className="text-sm text-gray-500">Monitoring Absensi Siswa dan Guru</p>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -198,26 +204,27 @@ const LoginForm: React.FC = () => {
             placeholder="Masukkan password Anda"
             value={formData.password}
             onChange={handleInputChange("password")}
-            showPasswordToggle={true}
+            showPasswordToggle
             showPassword={showPassword}
             onTogglePassword={() => setShowPassword(!showPassword)}
           />
 
           <div className="text-right mt-6">
-            <Button asChild variant="link"><Link href="/lupa-password">Lupa Password?</Link></Button>
+            <Button asChild variant="link">
+              <Link href="/lupa-password">Lupa Password?</Link>
+            </Button>
           </div>
 
           <button
             type="submit"
-            disabled={isNullForm}
+            disabled={isFormEmpty || mutation.status === "pending"}
             className={`w-full bg-[#2F4C87] text-white py-3.5 rounded-lg font-semibold text-lg transform transition-all duration-200 shadow-md hover:shadow-xl 
-    ${
-      !formData.nisn || !formData.password
-        ? "opacity-50 cursor-not-allowed"
-        : "hover:bg-[#253a6a] hover:-translate-y-0.5"
-    }`}
+              ${isFormEmpty || mutation.status === "pending"
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:bg-[#253a6a] hover:-translate-y-0.5"}
+            `}
           >
-            Masuk
+            {mutation.status === "pending" ? "Loading..." : "Masuk"}
           </button>
         </form>
       </div>
