@@ -3,7 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { LoadingProvider } from "@/components/LoadingContext";
-import Providers from "@/app/providers";
+import Providers from "@/providers/query-provider";
 
 // FONTS GLOBAL
 const poppins = Poppins({
