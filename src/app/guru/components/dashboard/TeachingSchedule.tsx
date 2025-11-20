@@ -1,4 +1,7 @@
+// Komponen untuk menampilkan jadwal mengajar guru
 export default function TeachingSchedule() {
+  // Data jadwal (dummy)
+  // TODO: nanti diganti dengan API jadwal real-time
   const schedules = [
     { time: "08:00 - 09:30", subject: "Matematika - XII A", students: 32 },
     { time: "09:30 - 11:00", subject: "Matematika - XII B", students: 30 },
@@ -8,6 +11,7 @@ export default function TeachingSchedule() {
 
   return (
     <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+      {/* Judul */}
       <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -23,13 +27,14 @@ export default function TeachingSchedule() {
         Jadwal Mengajar Hari Ini
       </h2>
 
-      <ul>
+      {/* Daftar jadwal */}
+      <ul className="divide-y divide-gray-200">
         {schedules.map(({ time, subject, students }) => (
           <li
             key={subject}
-            className="flex justify-between items-center py-1 border-b border-gray-200"
+            className="flex justify-between items-center py-3 transition-colors duration-150 hover:bg-indigo-50 rounded-md px-2"
           >
-            <span className="text-gray-800">{time}</span>
+            <span className="text-gray-800 font-medium">{time}</span>
             <span className="text-primary-600 font-semibold cursor-pointer hover:underline">
               {subject}
             </span>

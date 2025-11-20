@@ -4,34 +4,47 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Lock, Save } from "lucide-react";
 
+/**
+ * Komponen untuk mengubah password guru
+ */
 export default function UbahPassword() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  // Message untuk feedback sukses/error
   const [message, setMessage] = useState<null | { type: "success" | "error"; text: string }>(null);
 
+  // Handle submit form
   const handlePasswordChange = (e: React.FormEvent) => {
     e.preventDefault();
     setMessage(null);
 
+    // Validasi konfirmasi password
     if (newPassword !== confirmPassword) {
       setMessage({ type: "error", text: "Konfirmasi password tidak cocok." });
       return;
     }
 
+    // Validasi panjang password
     if (newPassword.length < 6) {
       setMessage({ type: "error", text: "Password baru minimal 6 karakter." });
       return;
     }
 
+    // Simulasi API call
     console.log("Mengubah password...", { currentPassword, newPassword });
     setMessage({ type: "success", text: "Password berhasil diubah!" });
 
+    // Reset form
     setCurrentPassword("");
     setNewPassword("");
     setConfirmPassword("");
   };
 
+  /**
+   * Komponen notifikasi untuk menampilkan pesan sukses atau error
+   */
   const Notification = ({ type, text }: { type: "success" | "error"; text: string }) => (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
@@ -46,14 +59,18 @@ export default function UbahPassword() {
 
   return (
     <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 space-y-6">
+      {/* Header */}
       <div className="flex items-center gap-3 border-b pb-4 mb-2">
         <Lock className="w-5 h-5 text-primary-600" />
         <h2 className="text-xl font-semibold text-gray-800">Ubah Password</h2>
       </div>
 
+      {/* Notifikasi */}
       {message && <Notification {...message} />}
 
+      {/* Form Ubah Password */}
       <form onSubmit={handlePasswordChange} className="space-y-6">
+        {/* Password Lama */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Password Lama:</label>
           <input
@@ -66,6 +83,7 @@ export default function UbahPassword() {
           />
         </div>
 
+        {/* Password Baru */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Password Baru:</label>
           <input
@@ -78,6 +96,7 @@ export default function UbahPassword() {
           />
         </div>
 
+        {/* Konfirmasi Password Baru */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Password Baru:</label>
           <input
@@ -90,6 +109,7 @@ export default function UbahPassword() {
           />
         </div>
 
+        {/* Tombol Simpan */}
         <div className="pt-4 flex justify-end">
           <motion.button
             type="submit"

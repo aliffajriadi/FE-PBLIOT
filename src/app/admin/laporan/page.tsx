@@ -10,7 +10,7 @@ import AdminLayout from '../component/layout/Layout';
 const generateDummyData = (formData: LaporanFormData): LaporanData => {
   // Simulasi data berdasarkan form input
   const siswaCount = formData.kelas === 'Semua Kelas' ? 156 : 32;
-  const hadir = Math.floor(siswaCount * 0.92);
+  const _hadir = Math.floor(siswaCount * 0.92);
   const terlambat = 15;
   const alfa = 8;
 
@@ -29,6 +29,7 @@ const generateDummyData = (formData: LaporanFormData): LaporanData => {
         'Yudi Santoso', 'Fitri Handayani', 'Agus Susanto', 'Ratna Dewi',
         'Bambang Wijaya', 'Indah Permata', 'Hadi Kusuma', 'Nina Sari'
       ][i - 1] || `Siswa ${i}`,
+      kelas: kelas,
       jumlahHadir: Math.floor(Math.random() * 5) + 18,
       jumlahTerlambat: Math.floor(Math.random() * 4),
       jumlahAlfa: Math.floor(Math.random() * 3),

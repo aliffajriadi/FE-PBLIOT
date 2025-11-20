@@ -15,9 +15,14 @@ interface TableAbsensiProps {
   data: AbsensiData[];
 }
 
+/**
+ * Komponen tabel absensi siswa
+ */
 export default function TableAbsensi({ data }: TableAbsensiProps) {
   return (
     <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+
+      {/* Header tabel dengan tombol ekspor */}
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl font-semibold text-gray-800 flex items-center space-x-2">
           <CalendarDays className="w-6 h-6 text-primary-600" />
@@ -29,8 +34,11 @@ export default function TableAbsensi({ data }: TableAbsensiProps) {
         </button>
       </div>
 
+      {/* Tabel data */}
       <div className="overflow-x-auto">
         <table className="min-w-full border-collapse text-sm">
+
+          {/* Header kolom */}
           <thead>
             <tr className="bg-indigo-50/50 text-left border-b border-indigo-200 text-primary-800">
               <th className="p-4 font-semibold w-1/6">TANGGAL</th>
@@ -40,6 +48,8 @@ export default function TableAbsensi({ data }: TableAbsensiProps) {
               <th className="p-4 font-semibold w-1/4">STATUS</th>
             </tr>
           </thead>
+
+          {/* Body tabel */}
           <tbody>
             {data.length > 0 ? (
               data.map((item, index) => (
@@ -50,9 +60,7 @@ export default function TableAbsensi({ data }: TableAbsensiProps) {
                   <td className="p-4 text-gray-600">{item.tanggal}</td>
                   <td className="p-4 font-medium text-gray-800">{item.nama}</td>
                   <td className="p-4 text-gray-600">{item.kelas}</td>
-                  <td className="p-4 text-gray-600">
-                    {item.jamMasuk !== "-" ? item.jamMasuk : "-"}
-                  </td>
+                  <td className="p-4 text-gray-600">{item.jamMasuk || "-"}</td>
                   <td className="p-4">
                     <StatusBadge status={item.status} />
                   </td>

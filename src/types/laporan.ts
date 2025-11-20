@@ -2,6 +2,7 @@
 export interface DetailAbsensi {
   nis: string;
   namaSiswa: string;
+  kelas: string;
   jumlahHadir: number;
   jumlahTerlambat: number;
   jumlahAlfa: number;

@@ -17,11 +17,9 @@ const absensiData = [
 ];
 
 export default function Page() {
-  const [filteredMonth, setFilteredMonth] = useState<string>("");
   const [filteredData, setFilteredData] = useState(absensiData);
 
   const handleFilter = (bulan: string) => {
-    setFilteredMonth(bulan);
 
     if (!bulan) {
       setFilteredData(absensiData);

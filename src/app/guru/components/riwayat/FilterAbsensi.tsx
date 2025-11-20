@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Search, CalendarDays } from "lucide-react";
 
 interface FilterAbsensiProps {
@@ -13,6 +12,9 @@ interface FilterAbsensiProps {
   onFilter: () => void;
 }
 
+/**
+ * Komponen filter absensi untuk guru
+ */
 export default function FilterAbsensi({
   kelas,
   setKelas,
@@ -25,18 +27,16 @@ export default function FilterAbsensi({
   return (
     <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+
         {/* Pilih Kelas */}
         <div className="col-span-1">
-          <label
-            htmlFor="kelas"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
+          <label htmlFor="kelas" className="block text-sm font-medium text-gray-700 mb-1">
             Pilih Kelas:
           </label>
           <div className="relative">
             <select
               id="kelas"
-              className="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-800 focus:ring-indigo-500 focus:border-indigo-500 appearance-none bg-white"
+              className="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-800 focus:ring-indigo-500 focus:border-indigo-500 appearance-none bg-white cursor-pointer"
               value={kelas}
               onChange={(e) => setKelas(e.target.value)}
             >
@@ -51,10 +51,7 @@ export default function FilterAbsensi({
 
         {/* Cari Siswa */}
         <div className="col-span-1 md:col-span-2">
-          <label
-            htmlFor="nama"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
+          <label htmlFor="nama" className="block text-sm font-medium text-gray-700 mb-1">
             Cari Siswa:
           </label>
           <div className="relative">
@@ -70,12 +67,9 @@ export default function FilterAbsensi({
           </div>
         </div>
 
-        {/* Tanggal */}
+        {/* Pilih Tanggal */}
         <div className="col-span-1">
-          <label
-            htmlFor="tanggal"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
+          <label htmlFor="tanggal" className="block text-sm font-medium text-gray-700 mb-1">
             Tanggal:
           </label>
           <div className="relative">
@@ -90,7 +84,7 @@ export default function FilterAbsensi({
         </div>
       </div>
 
-      {/* Tombol Terapkan */}
+      {/* Tombol Terapkan Filter */}
       <div className="mt-4 flex justify-end">
         <button
           onClick={onFilter}

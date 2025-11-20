@@ -20,10 +20,21 @@ export const useCreateUser = () => {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["users"] });
     },
-    onError: (error: any) => {
-      console.error("Create user failed:", error.response?.data || error.message);
-      alert(error.response?.data?.message || "Gagal membuat user");
-    },
+    onError: (error: unknown) => {
+      if (error instanceof Error) {
+        console.error("Create user failed:", error.message);
+        alert(error.message);
+      } else if (typeof error === "object" && error !== null && "response" in error) {
+        // jika error dari axios
+        const err = error as { response?: { data?: { message?: string } } };
+        console.error("Create user failed:", err.response?.data || err);
+        alert(err.response?.data?.message || "Gagal membuat user");
+      } else {
+        console.error("Create user failed:", error);
+        alert("Gagal membuat user");
+      }
+    }
+
   });
 };
 

@@ -24,7 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, onClose }) => {
   const pathname = usePathname()
 
   // Menu berdasarkan role
-  const menus: Record<string, { label: string; icon: any; href: string }[]> = {
+  const menus: Record<string, { label: string; icon: React.ComponentType<React.SVGProps<SVGSVGElement>>; href: string }[]> = { 
     admin: [
       { label: 'Dashboard', icon: LayoutDashboard, href: '/admin' },
       { label: 'Data Kelas', icon: Building2, href: '/admin/data-kelas' },
