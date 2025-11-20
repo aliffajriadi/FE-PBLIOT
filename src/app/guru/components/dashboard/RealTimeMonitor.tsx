@@ -18,7 +18,7 @@ export default function RealTimeMonitor({
   return (
     <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
       <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-        <Clock className="w-6 h-6 text-indigo-600" />
+        <Clock className="w-6 h-6 text-primary-600" />
         Pemantauan Real-time Kelas
       </h2>
 
@@ -53,7 +53,7 @@ export default function RealTimeMonitor({
       </div>
 
       <div className="flex items-center gap-4 mt-6">
-        <div className="text-4xl font-extrabold text-indigo-600">
+        <div className="text-4xl font-extrabold text-primary-600">
           {classData.presentCount}
           <span className="text-gray-400">/{classData.totalStudents}</span> Hadir
         </div>

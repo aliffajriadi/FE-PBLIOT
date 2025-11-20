@@ -14,7 +14,7 @@ export default function QuickActions() {
       {actions.map((action, idx) => (
         <button
           key={idx}
-          className="bg-gradient-to-r from-blue-700 to-blue-800 hover:from-blue-800 hover:to-blue-900 text-white rounded-xl p-6 flex items-center justify-center gap-3 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1"
+          className="bg-primary from-blue-700 to-blue-800 hover:opacity-90 hover:to-blue-900 text-white rounded-xl p-6 flex items-center justify-center gap-3 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1"
         >
           <action.icon className="w-5 h-5" />
           <span className="font-semibold">{action.label}</span>

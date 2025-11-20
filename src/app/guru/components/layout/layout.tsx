@@ -19,7 +19,7 @@ export default function GuruLayout({ children }: { children: React.ReactNode }) 
 
         {/* Isi halaman */}
         <main className="p-6 lg:p-8">
-          <h1 className="text-2xl font-bold text-gray-800 mb-6 lg:hidden">Dashboard</h1>
+          
           {children}
         </main>
       </div>

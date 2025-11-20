@@ -51,7 +51,7 @@ export default function Navbar({ role = 'admin', onMenuClick }: NavbarProps) {
             <span className="text-sm font-medium text-gray-700 hidden sm:block capitalize">
               {role}
             </span>
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-700 to-blue-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-full bg-primary from-blue-700 to-blue-600 flex items-center justify-center">
               <Users className="w-5 h-5 text-white" />
             </div>
           </button>

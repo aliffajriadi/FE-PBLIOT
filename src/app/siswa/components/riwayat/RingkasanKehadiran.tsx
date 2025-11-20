@@ -21,7 +21,7 @@ export default function RingkasanKehadiran({ data }: Props) {
     { title: "Total Hadir", value: hadir, icon: <CheckCircle className="w-7 h-7 text-green-600" />, color: "bg-green-50" },
     { title: "Terlambat", value: terlambat, icon: <Clock className="w-7 h-7 text-yellow-600" />, color: "bg-yellow-50" },
     { title: "Izin / Sakit", value: izin, icon: <Ban className="w-7 h-7 text-blue-600" />, color: "bg-blue-50" },
-    { title: "Total Hari", value: total, icon: <XCircle className="w-7 h-7 text-indigo-600" />, color: "bg-indigo-50" },
+    { title: "Total Hari", value: total, icon: <XCircle className="w-7 h-7 text-primary-600" />, color: "bg-indigo-50" },
   ];
 
   return (

@@ -20,7 +20,7 @@ export default function TableAbsensi({ data }: TableAbsensiProps) {
     <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl font-semibold text-gray-800 flex items-center space-x-2">
-          <CalendarDays className="w-6 h-6 text-indigo-600" />
+          <CalendarDays className="w-6 h-6 text-primary-600" />
           <span>Daftar Kehadiran</span>
         </h3>
         <button className="flex items-center space-x-2 border border-gray-300 text-gray-700 text-sm px-4 py-2 rounded-lg font-medium hover:bg-gray-50 transition duration-150 shadow-sm">
@@ -32,7 +32,7 @@ export default function TableAbsensi({ data }: TableAbsensiProps) {
       <div className="overflow-x-auto">
         <table className="min-w-full border-collapse text-sm">
           <thead>
-            <tr className="bg-indigo-50/50 text-left border-b border-indigo-200 text-indigo-800">
+            <tr className="bg-indigo-50/50 text-left border-b border-indigo-200 text-primary-800">
               <th className="p-4 font-semibold w-1/6">TANGGAL</th>
               <th className="p-4 font-semibold w-1/4">NAMA SISWA</th>
               <th className="p-4 font-semibold w-1/6">KELAS</th>

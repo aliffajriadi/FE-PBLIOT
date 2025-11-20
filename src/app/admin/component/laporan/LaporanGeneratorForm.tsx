@@ -48,7 +48,7 @@ export default function LaporanGeneratorForm({ onGenerate, isLoading }: LaporanG
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
       <div className="flex items-center gap-3 mb-6">
         <div className="p-2 bg-blue-50 rounded-lg">
-          <FileText size={24} className="text-blue-600" />
+          <FileText size={24} className="text-primary" />
         </div>
         <h2 className="text-xl font-semibold text-gray-800">Buat Laporan Baru</h2>
       </div>
@@ -136,7 +136,7 @@ export default function LaporanGeneratorForm({ onGenerate, isLoading }: LaporanG
           <button
             type="submit"
             disabled={isLoading}
-            className={`px-6 py-3 bg-blue-900 text-white rounded-lg font-medium shadow-md hover:bg-blue-800 transition-all ${
+            className={`px-6 py-3 bg-primary text-white rounded-lg font-medium shadow-md hover:opacity-90 transition-all ${
               isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg'
             }`}
           >

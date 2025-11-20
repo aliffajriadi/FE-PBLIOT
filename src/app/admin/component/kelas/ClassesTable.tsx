@@ -26,7 +26,7 @@ export default function ClassesTable() {
     <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-gray-200">
+          <tr className="border-b border-gray-200 bg-gray-100">
             <th className="text-left py-4 px-4 font-semibold text-gray-700">Nama Kelas</th>
             <th className="text-left py-4 px-4 font-semibold text-gray-700">Wali Kelas</th>
             <th className="text-left py-4 px-4 font-semibold text-gray-700">Jumlah Siswa</th>

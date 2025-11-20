@@ -94,7 +94,7 @@ export default function FilterAbsensi({
       <div className="mt-4 flex justify-end">
         <button
           onClick={onFilter}
-          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg px-6 py-2.5 shadow-md transition duration-200"
+          className="flex items-center gap-2 bg-primary hover:opacity-90 text-white font-semibold rounded-lg px-6 py-2.5 shadow-md transition duration-200"
         >
           <Search className="w-5 h-5" />
           Terapkan Filter

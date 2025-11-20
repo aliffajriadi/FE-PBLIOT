@@ -11,7 +11,7 @@ export default function TeachingSchedule() {
       <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-indigo-600"
+          className="h-6 w-6 text-primary-600"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -30,7 +30,7 @@ export default function TeachingSchedule() {
             className="flex justify-between items-center py-1 border-b border-gray-200"
           >
             <span className="text-gray-800">{time}</span>
-            <span className="text-indigo-600 font-semibold cursor-pointer hover:underline">
+            <span className="text-primary-600 font-semibold cursor-pointer hover:underline">
               {subject}
             </span>
             <span className="text-xs text-gray-400">{students} siswa</span>

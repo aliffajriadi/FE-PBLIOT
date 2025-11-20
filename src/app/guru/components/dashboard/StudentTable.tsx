@@ -29,7 +29,7 @@ export default function StudentTable({ selectedClass }: StudentTableProps) {
       <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-indigo-600"
+          className="h-6 w-6 text-primary-600"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -42,7 +42,7 @@ export default function StudentTable({ selectedClass }: StudentTableProps) {
       </h2>
 
       <table className="w-full table-auto border-collapse border border-gray-300 text-sm">
-        <thead className="text-indigo-700 bg-indigo-50">
+        <thead className="text-primary-700 bg-indigo-50">
           <tr>
             <th className="border border-gray-300 px-3 py-2 text-left">Nama Siswa</th>
             <th className="border border-gray-300 px-3 py-2 text-left">Status Kehadiran</th>
@@ -65,7 +65,7 @@ export default function StudentTable({ selectedClass }: StudentTableProps) {
                 <td className="border border-gray-300 px-3 py-2">{time}</td>
                 <td className="border border-gray-300 px-3 py-2">
                   <button 
-                        className="text-indigo-600 hover:text-indigo-800 font-medium text-xs p-1 rounded-md hover:bg-indigo-50 transition duration-150"
+                        className="text-primary-600 hover:text-primary-800 font-medium text-xs p-1 rounded-md hover:bg-indigo-50 transition duration-150"
                         onClick={() => console.log(`Edit status for ${name}`)}
                     >
                         Ubah Status

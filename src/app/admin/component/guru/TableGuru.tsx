@@ -46,7 +46,7 @@ export default function TeachersTable() {
                   {teacher.mataPelajaran.map((mapel, idx) => (
                     <span
                       key={idx}
-                      className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-lg font-medium"
+                      className="px-2 py-1 bg-blue-50 text-primary text-xs rounded-lg font-medium"
                     >
                       {mapel}
                     </span>

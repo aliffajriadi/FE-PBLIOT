@@ -74,8 +74,8 @@ const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, onClose }) => {
         <div className="p-6">
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-2">
-              <LayoutDashboard className="w-6 h-6 text-blue-700" />
-              <h2 className="text-lg font-bold text-gray-800 capitalize">{role}</h2>
+              <LayoutDashboard className="w-6 h-6 text-primary" />
+              <h2 className="text-lg font-bold text-primary capitalize">{role}</h2>
             </div>
           </div>
 
@@ -88,7 +88,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, onClose }) => {
                   href={item.href}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
                     isActive
-                      ? 'bg-blue-50 text-blue-700 font-semibold'
+                      ? 'bg-blue-50 text-primary font-semibold'
                       : 'text-gray-600 hover:bg-gray-50'
                   }`}
                 >
