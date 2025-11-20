@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Save, X } from 'lucide-react';
+import { useCreateClass } from '@/lib/hooks/useCreateClass';
 
 // Mock data guru
 const guruList = [
@@ -30,6 +31,7 @@ interface FormErrors {
 
 export default function ClassForm() {
   const router = useRouter();
+  const { mutate: createClass, isPending } = useCreateClass();
   const [formData, setFormData] = useState<FormData>({
     namaKelas: '',
     waliKelas: '',
@@ -61,9 +63,24 @@ export default function ClassForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
+
+    const payload = {
+      namaKelas: formData.namaKelas,
+      waliKelas: formData.waliKelas,
+      jumlahSiswa: formData.jumlahsiswa,
+      keterangan: formData.keterangan,
+    };
+
+    createClass(payload,{
+      onSuccess: () => {
+        router.push('/admin/data-kelas');
+      },
+      onError: (error) => {
+        console.error('Error creating class:', error);
+        setIsSubmitting(false);
+      }
+    });
 
     setIsSubmitting(true);
 
@@ -193,17 +210,17 @@ export default function ClassForm() {
       <div className="flex flex-col sm:flex-row gap-3 pt-4">
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isPending}
           className="flex-1 bg-gradient-to-r from-blue-700 to-blue-800 hover:from-blue-800 hover:to-blue-900 disabled:from-gray-400 disabled:to-gray-500 text-white px-6 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:transform-none disabled:cursor-not-allowed"
         >
           <Save className="w-5 h-5" />
-          <span>{isSubmitting ? 'Menyimpan...' : 'Simpan Data Kelas'}</span>
+          <span>{isPending ? 'Menyimpan...' : 'Simpan Data Kelas'}</span>
         </button>
         
         <button
           type="button"
           onClick={handleCancel}
-          disabled={isSubmitting}
+          disabled={isPending}
           className="flex-1 sm:flex-initial bg-white hover:bg-gray-50 text-gray-700 px-6 py-3 rounded-xl font-semibold border-2 border-gray-200 flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <X className="w-5 h-5" />

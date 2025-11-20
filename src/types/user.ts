@@ -1,11 +1,25 @@
-export interface user {
-    id: number;
-    name: string;
-    email: string;
-    password: string;
+export interface User {
+  id: number;
+  name: string;
+  role: "admin" | "guru" | "siswa";
+  nohp?: string;
+  nip?: string;   // hanya guru
+  nis?: string;   // hanya siswa
+  password?: string;
 }
+
 
 export interface datauser {
     id: number;
-    nama: string;
+    name: string;
+}
+
+export interface CreateUserPayload {
+  name: string;
+  role: "admin" | "guru" | "siswa";
+  nohp?: string;
+  nip?: string;      // hanya guru
+  nisn?: string;     // hanya siswa
+  password: string;
+  rfidCode?: string; // wajib untuk guru/siswa
 }
