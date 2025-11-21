@@ -1,16 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-export default function TableHeaderControls() {
+interface TableHeaderControlsProps {
+  onSearch: (query: string) => void; // prop untuk kirim search query ke parent
+}
+
+export default function TableHeaderControls({ onSearch }: TableHeaderControlsProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
 
   const handleAddTeacher = () => {
     router.push('/admin/data-guru/add');
   };
+
+  // Kirim search query ke parent saat berubah
+  useEffect(() => {
+    onSearch(searchQuery);
+  }, [searchQuery, onSearch]);
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between mb-6">

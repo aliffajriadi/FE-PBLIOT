@@ -18,6 +18,7 @@ export default function EditTeacherPage({ params }: EditTeacherPageProps) {
   const router = useRouter();
   const [teacher, setTeacher] = useState<Teacher | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
 
   useEffect(() => {
     // Simulate fetching data

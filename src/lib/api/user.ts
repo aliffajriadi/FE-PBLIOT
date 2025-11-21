@@ -12,26 +12,26 @@ export const LogoutRequest = () =>
   api.post("/auth/logout").then(res => res.data);
 
 export const createUser = async (payload: CreateUserPayload) => {
-  const res = await api.post("/user", payload);
+  const res = await api.post("/user", payload, { withCredentials: true });
   return res.data.data;
 };
 
 export const getUsers = async () => {
-  const res = await api.get("/user");
+  const res = await api.get("/user", { withCredentials: true });
   return res.data.data;
 };
 
 export const getUserById = async (id: number) => {
-  const res = await api.get(`/user/${id}`);
+  const res = await api.get(`/user/${id}`, { withCredentials: true });
   return res.data.data;
 };
 
 export const updateUser = async (id: number, data: Partial<CreateUserPayload>) => {
-  const res = await api.put(`/user/${id}`, data);
+  const res = await api.put(`/user/${id}`, data, { withCredentials: true });
   return res.data.data;
 };
 
 export const deleteUser = async (id: number) => {
-  const res = await api.delete(`/user/${id}`);
+  const res = await api.delete(`/user/${id}`, { withCredentials: true });
   return res.data.data;
 };
