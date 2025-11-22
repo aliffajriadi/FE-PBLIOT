@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createUser, getUsers, updateUser, deleteUser  } from "@/lib/api/user";
+import { createUser, getUsers, updateUser, deleteUser, getUserById  } from "@/lib/api/user";
 import { CreateUserPayload } from "@/types/user";
 
 export const useUsers = () => {
@@ -38,7 +38,6 @@ export const useCreateUser = () => {
   });
 };
 
-
 export const useUpdateUser = () => {
   const qc = useQueryClient();
 
@@ -64,5 +63,14 @@ export const useDeleteUser = () => {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["users"] });
     },
+  });
+};
+
+export const useUserById = (id: number) => {
+
+   return useQuery({
+    queryKey: ["user", id],
+    queryFn: () => getUserById(id), // Atau pakai endpoint khusus getUserById
+    enabled: !!id, // hanya fetch kalau id ada
   });
 };

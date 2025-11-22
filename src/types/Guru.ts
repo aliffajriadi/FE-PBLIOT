@@ -2,11 +2,11 @@ export interface Teacher {
   id: string;
   nip?: string;
   nama: string;
-  email: string;
+  name?: string;
   telepon: string;
-  mataPelajaran: string[];
-  alamat: string;
-  rfidCode?: string;
+  rfid? : {
+    rfid: string;
+  }
   role: "guru" | "siswa" | "admin";
 }
 
@@ -15,9 +15,6 @@ export interface TeacherFormData {
   role: "guru" | "siswa" | "admin";
   nip: string;
   nama: string;
-  email: string;
   telepon: string;
-  mataPelajaran: string[];
-  alamat: string;
   rfidCode?: string;
 }

@@ -2,16 +2,43 @@
 
 import { Edit2, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useDeleteUser } from '@/lib/hooks/useUser';
+import { useState } from 'react';
+import ConfirmDeleteModal from '@/components/ConfirmDeleteModal';
+import { Teacher } from '@/types/Guru';
 
 interface TeachersTableProps {
-  data: any[]; // data sudah difilter dari parent (search)
+  data: Teacher[];
 }
 
 export default function TeachersTable({ data }: TeachersTableProps) {
   const router = useRouter();
 
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [showModal, setShowModal] = useState(false); 
+
   const handleEdit = (id: string) => router.push(`/admin/data-guru/${id}/edit`);
-  const handleDelete = (id: string) => console.log('Delete teacher:', id);
+  const deleteUserMutation = useDeleteUser();
+
+  const handleConfirmDelete = (id: number) => {
+    setSelectedId(id);
+    setShowModal(true);
+  };
+  
+  const handleDelete = () => {
+    if (!selectedId) return;
+
+    deleteUserMutation.mutate(selectedId, {
+      onSuccess: () => {
+        setShowModal(false);
+        setSelectedId(null);
+      },
+      onError: (err: unknown) => {
+        console.error(err);
+        alert("Gagal menghapus guru");
+      },
+    });
+  };
 
   if (!data || data.length === 0) {
     return (
@@ -22,6 +49,7 @@ export default function TeachersTable({ data }: TeachersTableProps) {
   }
 
   return (
+    <>
     <div className="overflow-x-auto">
       <table className="w-full border border-gray-200 rounded-xl shadow-sm min-w-[600px]">
         <thead className="bg-gray-50">
@@ -35,11 +63,11 @@ export default function TeachersTable({ data }: TeachersTableProps) {
         </thead>
         <tbody>
           {data.map((teacher: any, index: number) => (
-            <tr
-              key={teacher.id}
-              className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
-            >
-              <td className="py-4 px-4 font-mono text-sm text-gray-600">{`G00${index + 1}`}</td>
+              <tr
+                key={teacher.id}
+                className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+              >
+                <td className="py-4 px-4 font-mono text-sm text-gray-600">{`G00${index + 1}`}</td>
               <td className="py-4 px-4 font-medium text-gray-800">{teacher.name}</td>
               <td className="py-4 px-4 text-gray-600">{teacher.nip}</td>
               <td className="py-4 px-4 text-gray-600">{teacher.rfid?.rfid ?? '-'}</td>
@@ -53,7 +81,7 @@ export default function TeachersTable({ data }: TeachersTableProps) {
                     <Edit2 className="w-4 h-4 text-gray-500 group-hover:text-blue-600" />
                   </button>
                   <button
-                    onClick={() => handleDelete(teacher.id)}
+                    onClick={() => handleConfirmDelete(Number(teacher.id))}
                     className="p-2 hover:bg-red-50 rounded-lg transition-colors group"
                     title="Hapus"
                   >
@@ -66,5 +94,14 @@ export default function TeachersTable({ data }: TeachersTableProps) {
         </tbody>
       </table>
     </div>
+    <ConfirmDeleteModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={handleDelete}
+        title="Hapus Data Guru"
+        message="Apakah kamu yakin ingin menghapus data guru ini? Tindakan ini tidak dapat dibatalkan."
+      />
+    </>
   );
 }
+  

@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Save, X } from 'lucide-react';
 import { Teacher, TeacherFormData } from '@/types/Guru';
-import { createUser } from "@/lib/api/user";
-import { AxiosError } from 'axios';
+import { createUser, updateUser } from "@/lib/api/user";
 
 interface TeacherFormProps {
   mode: 'add' | 'edit';
@@ -26,11 +25,8 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
     id: '',
     nama: '',
     nip: '',
-    email: '',
     telepon: '',
-    alamat: '',
     rfidCode: '',
-    mataPelajaran: [],
     role: 'guru', // default literal type
   });
   const [errors, setErrors] = useState<FormErrors>({});
@@ -39,10 +35,12 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
   useEffect(() => {
     if (mode === 'edit' && initialData) {
       setFormData({
-        ...initialData,
-        nip: initialData.nip || '',
-        rfidCode: initialData.rfidCode || '',
-        role: initialData.role as 'guru' | 'siswa' | 'admin',
+        id: initialData.id?.toString() ?? "",
+        nama: initialData.nama ?? "",
+        nip: initialData.nip ?? "",
+        telepon: initialData.telepon ?? "",
+        rfidCode: initialData.rfid?. rfid ?? "",
+        role: initialData.role as 'guru' | 'admin' | 'siswa',
       });
     }
   }, [mode, initialData]);
@@ -52,9 +50,6 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
 
     if (!formData.nip.trim()) newErrors.id = 'NIP Guru harus diisi';
     if (!formData.nama.trim()) newErrors.nama = 'Nama lengkap harus diisi';
-    if (!formData.email.trim()) newErrors.email = 'Email harus diisi';
-    else if (!/\S+@\S+\.\S+/.test(formData.email))
-      newErrors.email = 'Format email tidak valid';
     if (!formData.telepon.trim()) newErrors.telepon = 'Nomor telepon harus diisi';
 
     setErrors(newErrors);
@@ -62,42 +57,37 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+  e.preventDefault();
+  if (!validateForm()) return;
 
-    setIsSubmitting(true);
+  setIsSubmitting(true);
 
-    const payload = {
-      name: formData.nama,
-      role: formData.role as 'guru' | 'admin' | 'siswa',
-      nip: formData.nip,
-      rfidCode: formData.rfidCode,
-      nohp: formData.telepon,
-      password: 'guru123',
-    };
-
-    console.log("Payload to send:", payload);
-
-    try {
-      const newUser = await createUser(payload);
-      console.log("User created:", newUser);
-      router.push("/admin/data-guru");
-    } catch (err: unknown) {
-      const axiosError = err as AxiosError;
-      if (axiosError.response) {
-        console.error("Backend error:", axiosError.response.data);
-        alert("Error from server: " + JSON.stringify(axiosError.response.data));
-      } else if (axiosError.request) {
-        console.error("No response received:", axiosError.request);
-        alert("No response received from server");
-      } else {
-        console.error("Error setting up request:", axiosError.message);
-        alert("Error: " + axiosError.message);
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
+  const payload = {
+    name: formData.nama,
+    role: formData.role,
+    nip: formData.nip,
+    rfidCode: formData.rfidCode,
+    nohp: formData.telepon,
+    password: "",
   };
+
+  try {
+    if (mode === 'add') {
+      payload["password"] = "guru123";
+      await createUser(payload);
+    } else if (mode === 'edit' && initialData?.id) {
+      await updateUser(Number(initialData.id), payload); // <= PANGGIL API UPDATE
+    }
+
+    router.push("/admin/data-guru");
+  } catch (err: any) {
+    console.error(err);
+    alert(err?.response?.data?.message ?? "Terjadi kesalahan");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   const handleCancel = () => {
     router.push('/admin/data-guru');
@@ -168,27 +158,6 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
           {errors.nama && <p className="text-red-500 text-sm mt-1">{errors.nama}</p>}
         </div>
 
-        {/* Email */}
-        <div>
-          <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-            Email <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="contoh@sekolah.id"
-            className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${
-              errors.email
-                ? 'border-red-500 focus:ring-red-500'
-                : 'border-gray-200 focus:ring-blue-500 focus:border-transparent'
-            }`}
-          />
-          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-        </div>
-
         {/* Nomor Telepon */}
         <div>
           <label htmlFor="telepon" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -230,22 +199,6 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
           />
           {errors.rfidCode && <p className="text-red-500 text-sm mt-1">{errors.rfidCode}</p>}
         </div>
-      </div>
-
-      {/* Alamat */}
-      <div>
-        <label htmlFor="alamat" className="block text-sm font-semibold text-gray-700 mb-2">
-          Alamat
-        </label>
-        <textarea
-          id="alamat"
-          name="alamat"
-          value={formData.alamat}
-          onChange={handleChange}
-          placeholder="Alamat lengkap..."
-          rows={4}
-          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
-        />
       </div>
 
       {/* Buttons */}

@@ -1,36 +1,49 @@
 'use client';
 
+import React from "react";
 import AdminLayout from '../../../component/layout/Layout';
 import TeacherForm from '../../../component/guru/FormGuru';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { getTeacherById } from '@/lib/mockData';
 import { useEffect, useState } from 'react';
 import { Teacher } from '@/types/Guru';
+import { getUserById } from '@/lib/api/user';
 
 interface EditTeacherPageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export default function EditTeacherPage({ params }: EditTeacherPageProps) {
   const router = useRouter();
+
+  // Unwrap params
+  const { id } = React.use(params);
+
   const [teacher, setTeacher] = useState<Teacher | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  
 
   useEffect(() => {
-    // Simulate fetching data
     const fetchTeacher = async () => {
-      // In real app, this would be an API call
-      const data = getTeacherById(params.id);
-      setTeacher(data || null);
+      try {
+        const data = await getUserById(Number(id));
+
+        setTeacher({
+          id: data.id.toString(),
+          nip: data.nip,
+          nama: data.name,
+          telepon: data.nohp,
+          rfid: data.rfid,
+          role: data.role,
+        });
+      } catch (e) {
+        console.error(e);
+        setTeacher(null);
+      }
       setIsLoading(false);
     };
 
     fetchTeacher();
-  }, [params.id]);
+  }, [id]);
 
   if (isLoading) {
     return (
@@ -48,7 +61,7 @@ export default function EditTeacherPage({ params }: EditTeacherPageProps) {
         <div className="text-center py-12">
           <p className="text-gray-500">Data guru tidak ditemukan</p>
           <button
-            onClick={() => router.push('/admin/Dataguru')}
+            onClick={() => router.push('/admin/data-guru')}
             className="mt-4 text-blue-600 hover:underline"
           >
             Kembali ke Daftar Guru
@@ -63,13 +76,13 @@ export default function EditTeacherPage({ params }: EditTeacherPageProps) {
       <div className="mb-6">
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors mb-4"
+          className="flex items-center gap-2 text-gray-600 hover:text-blue-600 mb-4"
         >
           <ArrowLeft className="w-5 h-5" />
           <span className="font-medium">Kembali</span>
         </button>
+
         <h1 className="text-2xl font-bold text-gray-800">Edit Data Guru</h1>
-        <p className="text-gray-600 mt-1">ID Guru: {teacher.id}</p>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
