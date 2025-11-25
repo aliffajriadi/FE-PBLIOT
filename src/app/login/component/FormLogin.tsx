@@ -3,7 +3,7 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import { Eye, EyeOff, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { InputFieldProps, SelectFieldProps, FormData, LoginPayload } from "@/types/login";
-import {useLogin} from "@/lib/hooks/useLogin";
+import { useLogin } from "@/lib/hooks/useLogin";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -79,9 +79,10 @@ const SelectField: React.FC<SelectFieldProps> = ({ label, value, onChange, optio
 // LOGIN FORM COMPONENT
 // ============================================
 const LoginForm: React.FC = () => {
+  // Catatan: formData.nisn di sini berfungsi sebagai "Inputan User" (bisa berisi NISN, NIP, atau Username)
   const [formData, setFormData] = useState<FormData>({
     loginAs: "SISWA",
-    nisn: "",
+    nisn: "", 
     username: "",
     password: "",
   });
@@ -112,18 +113,24 @@ const LoginForm: React.FC = () => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    const payload: LoginPayload = {
+    // 1. Siapkan payload dasar
+    // Gunakan 'any' sementara agar fleksibel memasukkan key dinamis (nisn/nip/name)
+    const payload: any = {
       role: formData.loginAs.toLowerCase(),
       password: formData.password,
     };
 
-    if (formData.loginAs === "SISWA" || formData.loginAs === "GURU") {
-      payload.identifier = formData.nisn;
+    // 2. Logika Pemilihan Kunci (Key Selection) yang BENAR
+    // Backend menuntut kunci spesifik berdasarkan role
+    if (formData.loginAs === "SISWA") {
+      payload.nisn = formData.nisn; // Kunci harus 'nisn'
+    } else if (formData.loginAs === "GURU") {
+      payload.nip = formData.nisn;  // Kunci harus 'nip'
     } else if (formData.loginAs === "ADMIN") {
-      payload.name = formData.nisn;
+      payload.name = formData.nisn; // Kunci harus 'name'
     }
 
-    console.log("Login payload:", payload);
+    console.log("Login payload fix:", payload);
     mutation.mutate(payload);
   };
 
@@ -171,6 +178,7 @@ const LoginForm: React.FC = () => {
                 ? "Masukkan NIP Anda"
                 : "Masukkan Username Anda"
             }
+            // Kita gunakan state 'nisn' sebagai penampung inputan user (apapun role-nya)
             value={formData.nisn}
             onChange={handleInputChange("nisn")}
           />

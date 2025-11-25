@@ -2,18 +2,19 @@
 export interface Siswa {
   id: string;
   nisn: string;
-  nama_lengkap: string;
+  name: string;
   kelas: string[];
-  uid_rfid: string;
+  rfid: { rfid: string };
   nama_orang_tua: string;
-  kontak_orang_tua: string;
+  nohp: string;
 }
 
 export interface SiswaFormData {
+  
   nisn: string;
-  nama_lengkap: string;
+  name: string;
   kelas: string[];
-  uid_rfid: string;
+  rfid?: string;
   nama_orang_tua: string;
-  kontak_orang_tua: string;
+  nohp: string;
 }
