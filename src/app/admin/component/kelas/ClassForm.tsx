@@ -83,7 +83,7 @@ export default function ClassForm() {
     });
 
     setIsSubmitting(true);
-
+    console.log('Submitting form with data:', isSubmitting);
     // Simulate API call
     setTimeout(() => {
       console.log('Form submitted:', formData);

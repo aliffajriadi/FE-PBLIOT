@@ -2,6 +2,8 @@
 
 import { Users, GraduationCap, Building2 } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
+import { useUsers } from '@/lib/hooks/useUser';
+import { User } from '@/types/user';
 
 interface StatisticCardProps {
   title: string;
@@ -27,9 +29,14 @@ function StatisticCard({ title, value, icon: Icon, gradient }: StatisticCardProp
 }
 
 export default function SummaryCards() {
+  const { data } = useUsers();
+  const users = data?.users || [];
+
+  const totalSiswa = users.filter((u:User) => u.role === 'siswa').length;
+  const totalGuru = users.filter((u:User) => u.role === 'guru').length;
   const stats = [
-    { title: 'Total Siswa', value: '150', icon: Users, gradient: 'bg-gradient-to-br from-blue-500 to-blue-600' },
-    { title: 'Total Guru', value: '20', icon: GraduationCap, gradient: 'bg-gradient-to-br from-teal-500 to-teal-600' },
+    { title: 'Total Siswa', value: totalSiswa.toString(), icon: Users, gradient: 'bg-gradient-to-br from-blue-500 to-blue-600' },
+    { title: 'Total Guru', value:totalGuru.toString(), icon: GraduationCap, gradient: 'bg-gradient-to-br from-teal-500 to-teal-600' },
     { title: 'Total Kelas', value: '5', icon: Building2, gradient: 'bg-gradient-to-br from-orange-500 to-orange-600' },
     { title: 'Total Siswa', value: '150', icon: Users, gradient: 'bg-gradient-to-br from-indigo-500 to-indigo-600' },
   ];

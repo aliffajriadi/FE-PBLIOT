@@ -31,7 +31,7 @@ export default function EditTeacherPage({ params }: EditTeacherPageProps) {
           id: data.id.toString(),
           nip: data.nip,
           nama: data.name,
-          telepon: data.nohp,
+          nohp: data.nohp,
           rfid: data.rfid,
           role: data.role,
         });

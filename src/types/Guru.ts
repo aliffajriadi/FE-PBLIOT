@@ -3,7 +3,7 @@ export interface Teacher {
   nip?: string;
   nama: string;
   name?: string;
-  telepon: string;
+  nohp: string;
   rfid? : {
     rfid: string;
   }
@@ -15,6 +15,14 @@ export interface TeacherFormData {
   role: "guru" | "siswa" | "admin";
   nip: string;
   nama: string;
-  telepon: string;
+  nohp: string;
+  rfidCode?: string;
+}
+
+export interface FormErrors {
+  id?: string;
+  nama?: string;
+  email?: string;
+  nohp?: string;
   rfidCode?: string;
 }

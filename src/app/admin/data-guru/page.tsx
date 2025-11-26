@@ -5,7 +5,8 @@ import TeachersTable from '../component/guru/TableGuru';
 import TableHeaderControls from '../component/guru/TableHeaderControls';
 import { useState,useEffect } from 'react';
 import { useUsers } from '@/lib/hooks/useUser';
-
+import {Loading} from '@/components/Loading';
+import {Teacher} from '@/types/Guru';
 export default function TeachersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const { data, isLoading, isError } = useUsers(); // fetch semua users
@@ -15,15 +16,15 @@ export default function TeachersPage() {
   useEffect(() => {
     if (data?.users) {
       const teachers = data.users.filter(
-        (u: any) => u.role?.toLowerCase() === 'guru'
+        (u: Teacher) => u.role?.toLowerCase() === 'guru'
       );
 
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
         setFilteredTeachers(
           teachers.filter(
-            (t: any) =>
-              t.name.toLowerCase().includes(q) ||
+            (t: Teacher) =>
+              t.name?.toLowerCase().includes(q) ||
               t.nip?.toLowerCase().includes(q)
           )
         );
@@ -33,7 +34,7 @@ export default function TeachersPage() {
     }
   }, [data, searchQuery]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div><Loading/></div>;
   if (isError) return <div>Error loading data.</div>;
 
   return (

@@ -1,4 +1,4 @@
-const Loading = () => {
+export const Loading = () => {
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-black/30 backdrop-blur-xs z-50">
       <video
@@ -14,5 +14,3 @@ const Loading = () => {
     </div>
   );
 };
-
-export default Loading;

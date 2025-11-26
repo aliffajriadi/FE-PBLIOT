@@ -3,20 +3,12 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Save, X } from 'lucide-react';
-import { Teacher, TeacherFormData } from '@/types/Guru';
+import { Teacher, TeacherFormData, FormErrors } from '@/types/Guru';
 import { createUser, updateUser } from "@/lib/api/user";
-
+import { getErrorMessage } from '@/utils/getErrorMessage';
 interface TeacherFormProps {
   mode: 'add' | 'edit';
   initialData?: Teacher;
-}
-
-interface FormErrors {
-  id?: string;
-  nama?: string;
-  email?: string;
-  telepon?: string;
-  rfidCode?: string;
 }
 
 export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
@@ -25,7 +17,7 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
     id: '',
     nama: '',
     nip: '',
-    telepon: '',
+    nohp: '',
     rfidCode: '',
     role: 'guru', // default literal type
   });
@@ -38,7 +30,7 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
         id: initialData.id?.toString() ?? "",
         nama: initialData.nama ?? "",
         nip: initialData.nip ?? "",
-        telepon: initialData.telepon ?? "",
+        nohp: initialData.nohp ?? "",
         rfidCode: initialData.rfid?. rfid ?? "",
         role: initialData.role as 'guru' | 'admin' | 'siswa',
       });
@@ -50,7 +42,7 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
 
     if (!formData.nip.trim()) newErrors.id = 'NIP Guru harus diisi';
     if (!formData.nama.trim()) newErrors.nama = 'Nama lengkap harus diisi';
-    if (!formData.telepon.trim()) newErrors.telepon = 'Nomor telepon harus diisi';
+    if (!formData.nohp.trim()) newErrors.nohp = 'Nomor telepon harus diisi';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -67,7 +59,7 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
     role: formData.role,
     nip: formData.nip,
     rfidCode: formData.rfidCode,
-    nohp: formData.telepon,
+    nohp: formData.nohp,
     password: "",
   };
 
@@ -80,9 +72,9 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
     }
 
     router.push("/admin/data-guru");
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error(err);
-    alert(err?.response?.data?.message ?? "Terjadi kesalahan");
+    alert(getErrorMessage ?? "Terjadi kesalahan");
   } finally {
     setIsSubmitting(false);
   }
@@ -165,18 +157,18 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
           </label>
           <input
             type="tel"
-            id="telepon"
-            name="telepon"
-            value={formData.telepon}
+            id="nohp"
+            name="nohp"
+            value={formData.nohp}
             onChange={handleChange}
             placeholder="081234567890"
             className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${
-              errors.telepon
+              errors.nohp
                 ? 'border-red-500 focus:ring-red-500'
                 : 'border-gray-200 focus:ring-blue-500 focus:border-transparent'
             }`}
           />
-          {errors.telepon && <p className="text-red-500 text-sm mt-1">{errors.telepon}</p>}
+          {errors.nohp && <p className="text-red-500 text-sm mt-1">{errors.nohp}</p>}
         </div>
 
         {/* RFID */}

@@ -7,6 +7,7 @@ import { useState } from 'react';
 import ConfirmDeleteModal from '@/components/ConfirmDeleteModal'; // Menggunakan modal yang sama
 // Hapus import Teacher jika tidak dipakai, atau sesuaikan jika mau pakai tipe Siswa
 import { Siswa } from '@/types/Siswa'; 
+import { getErrorMessage } from '@/utils/getErrorMessage';
 
 
 interface TableSiswaProps {
@@ -15,6 +16,7 @@ interface TableSiswaProps {
 
 export default function TableSiswa({ data }: TableSiswaProps) {
   const router = useRouter();
+  console.log("Data Siswa:", data);
 
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [showModal, setShowModal] = useState(false); 
@@ -40,9 +42,9 @@ export default function TableSiswa({ data }: TableSiswaProps) {
         // Refresh halaman agar data hilang dari tabel
         window.location.reload();
       },
-      onError: (err: any) => {
+      onError: (err: unknown) => {
         console.error(err);
-        alert("Gagal menghapus siswa: " + (err?.response?.data?.message || "Terjadi kesalahan"));
+        alert("Gagal menghapus siswa " + getErrorMessage(err));
       },
     });
   };
@@ -63,24 +65,28 @@ export default function TableSiswa({ data }: TableSiswaProps) {
           <thead className="bg-gray-50">
             <tr>
               {/* Header Kolom Siswa */}
+              <th className="text-left py-3 px-4 font-semibold text-gray-700">ID Siswa</th>
               <th className="text-left py-3 px-4 font-semibold text-gray-700">NISN</th>
               <th className="text-left py-3 px-4 font-semibold text-gray-700">Nama Siswa</th>
               <th className="text-left py-3 px-4 font-semibold text-gray-700">UID RFID</th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">Kelas</th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">Nama Orang Tua</th>
               <th className="text-left py-3 px-4 font-semibold text-gray-700">Kontak Ortu</th>
               <th className="text-left py-3 px-4 font-semibold text-gray-700">Aksi</th>
             </tr>
           </thead>
           <tbody>
-            {data.map((siswa:Siswa, index) => (
+            {data.map((siswa : Siswa, index : number) => (
               <tr
                 key={siswa.id}
                 className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
               >
+                
+                {/* 0. ID Siswa*/}
+                <td className="py-4 px-4 font-mono text-sm text-gray-600">
+                  {`S00${index + 1}`}
+                </td>
                 {/* 1. NISN */}
                 <td className="py-4 px-4 font-mono text-sm text-gray-600">
-                  {siswa.nisn }
+                  {siswa.nisn ?? '-' }
                 </td>
 
                 {/* 2. Nama Siswa */}
@@ -93,24 +99,12 @@ export default function TableSiswa({ data }: TableSiswaProps) {
                   {siswa.rfid?.rfid || '-'}
                 </td>
 
-                {/* 4. Kelas (Placeholder Style) */}
-                <td className="py-4 px-4 text-gray-600">
-                  <span className="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-lg font-medium">
-                    {siswa.kelas || '-'}
-                  </span>
-                </td>
-
-                {/* 5. Nama Orang Tua (Placeholder) */}
-                <td className="py-4 px-4 text-gray-600 font-medium text-sm">
-                  {siswa.nama_orang_tua || '-'}
-                </td>
-
-                {/* 6. Kontak Ortu */}
+                {/* 4. Kontak Ortu */}
                 <td className="py-4 px-4 font-mono text-sm text-gray-600">
                   {siswa.nohp}
                 </td>
 
-                {/* 7. Aksi (Sama persis dengan Guru) */}
+                {/* 5. Aksi (Sama persis dengan Guru) */}
                 <td className="py-4 px-4">
                   <div className="flex items-center gap-2">
                     <button

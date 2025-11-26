@@ -57,12 +57,13 @@ export default function TeachersTable({ data }: TeachersTableProps) {
             <th className="text-left py-3 px-4 font-semibold text-gray-700">ID Guru</th>
             <th className="text-left py-3 px-4 font-semibold text-gray-700">Nama Guru</th>
             <th className="text-left py-3 px-4 font-semibold text-gray-700">NIP</th>
+            <th className="text-left py-3 px-4 font-semibold text-gray-700">No Telepon</th>
             <th className="text-left py-3 px-4 font-semibold text-gray-700">RFID Code</th>
             <th className="text-left py-3 px-4 font-semibold text-gray-700">Aksi</th>
           </tr>
         </thead>
         <tbody>
-          {data.map((teacher: any, index: number) => (
+          {data.map((teacher: Teacher, index: number) => (
               <tr
                 key={teacher.id}
                 className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
@@ -70,8 +71,9 @@ export default function TeachersTable({ data }: TeachersTableProps) {
                 <td className="py-4 px-4 font-mono text-sm text-gray-600">{`G00${index + 1}`}</td>
               <td className="py-4 px-4 font-medium text-gray-800">{teacher.name}</td>
               <td className="py-4 px-4 text-gray-600">{teacher.nip}</td>
+              <td className="py-4 px-4 text-gray-600">{teacher.nohp ?? '-'}</td>
               <td className="py-4 px-4 text-gray-600">{teacher.rfid?.rfid ?? '-'}</td>
-              <td className="py-4 px-4">
+              <td className="py-4 px-4">  
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleEdit(teacher.id)}

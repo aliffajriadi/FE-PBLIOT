@@ -4,21 +4,13 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Save, X } from 'lucide-react';
 import { createUser, updateUser } from "@/lib/api/user";
-import { KelasList } from '@/lib/mockData'; 
-import { Siswa , SiswaFormData} from '@/types/Siswa';
+import { Siswa , SiswaFormData, FormErrors} from '@/types/Siswa';
+import React from 'react';
+import { getErrorMessage } from '@/utils/getErrorMessage';
 
 interface SiswaFormProps {
   mode: 'add' | 'edit';
   initialData?: Siswa; 
-}
-
-interface FormErrors {
-  nisn?: string;
-  nama_lengkap?: string;
-  kelas?: string;
-  rfidCode?: string;
-  nama_orang_tua?: string;
-  nohp?: string;
 }
 
 export default function SiswaForm({ mode, initialData }: SiswaFormProps) {
@@ -27,9 +19,7 @@ export default function SiswaForm({ mode, initialData }: SiswaFormProps) {
   const [formData, setFormData] = useState<SiswaFormData>({
     nisn: '',
     name: '',
-    kelas: [],
     rfid: '',
-    nama_orang_tua: '',
     nohp: '',
   });
   
@@ -50,14 +40,8 @@ export default function SiswaForm({ mode, initialData }: SiswaFormProps) {
         // NAMA
         name: initialData.name || '', 
         
-        // KELAS
-        kelas: initialData.kelas || [],
-        
         // RFID (Handle nested atau flat structure)
         rfid: initialData.rfid?.rfid || '', 
-        
-        // NAMA ORTU
-        nama_orang_tua: initialData.nama_orang_tua || '',
         
         // KONTAK ORTU (FIX: Mengambil 'nohp' dari database)
         nohp: initialData.nohp || '',
@@ -116,9 +100,9 @@ export default function SiswaForm({ mode, initialData }: SiswaFormProps) {
       }
 
       router.push('/admin/data-siswa');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      const msg = err?.response?.data?.message || "Terjadi kesalahan saat menyimpan.";
+      const msg = getErrorMessage(err);
       alert("Gagal: " + msg);
     } finally {
       setIsSubmitting(false);
@@ -137,18 +121,6 @@ export default function SiswaForm({ mode, initialData }: SiswaFormProps) {
     if (errors[name as keyof FormErrors]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
-  };
-
-  const handleClassChange = (kelas: string) => {
-    setFormData((prev) => {
-      const isSelected = prev.kelas.includes(kelas);
-      return {
-        ...prev,
-        kelas: isSelected
-          ? prev.kelas.filter((m) => m !== kelas)
-          : [...prev.kelas, kelas],
-      };
-    });
   };
 
   return (
@@ -211,47 +183,6 @@ export default function SiswaForm({ mode, initialData }: SiswaFormProps) {
           />
           {errors.rfidCode && <p className="text-red-500 text-sm mt-1">{errors.rfidCode}</p>}
         </div>
-      </div>
-
-      {/* Kelas (Opsional) */}
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-3">
-          Kelas yang Diampu <span className="text-gray-400 text-xs">(Opsional)</span>
-        </label>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-          {KelasList.map((kelas) => (
-            <label
-              key={kelas}
-              className={`flex items-center gap-2 px-4 py-3 border-2 rounded-xl cursor-pointer transition-all ${
-                formData.kelas.includes(kelas) ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
-              }`}
-            >
-              <input
-                type="checkbox"
-                checked={formData.kelas.includes(kelas)}
-                onChange={() => handleClassChange(kelas)}
-                className="w-4 h-4 text-blue-600 rounded"
-              />
-              <span className="text-sm font-medium text-gray-700">{kelas}</span>
-            </label>    
-          ))}
-        </div>
-      </div>
-
-      {/* Orang Tua & Kontak */}
-      <div>
-        <label htmlFor="nama_orang_tua" className="block text-sm font-semibold text-gray-700 mb-2">
-          Nama Orang Tua
-        </label>
-        <input
-          type="text"
-          id="nama_orang_tua"
-          name="nama_orang_tua"
-          value={formData.nama_orang_tua}
-          onChange={handleChange}
-          placeholder="Nama Orang Tua..."
-          className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
       </div>
 
       <div>
