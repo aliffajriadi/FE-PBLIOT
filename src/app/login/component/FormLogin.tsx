@@ -2,7 +2,12 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { Eye, EyeOff, ChevronDown } from "lucide-react";
 import Image from "next/image";
-import { InputFieldProps, SelectFieldProps, FormData, LoginPayload } from "@/types/login";
+import {
+  InputFieldProps,
+  SelectFieldProps,
+  FormData,
+  LoginPayload,
+} from "@/types/login";
 import { useLogin } from "@/lib/hooks/useLogin";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -28,7 +33,9 @@ const InputField: React.FC<InputFieldProps> = ({
       </label>
       <div className="relative">
         <input
-          type={showPasswordToggle ? (showPassword ? "text" : "password") : type}
+          type={
+            showPasswordToggle ? (showPassword ? "text" : "password") : type
+          }
           value={value}
           onChange={onChange}
           placeholder={placeholder}
@@ -40,7 +47,11 @@ const InputField: React.FC<InputFieldProps> = ({
             onClick={onTogglePassword}
             className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
           >
-            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            {showPassword ? (
+              <EyeOff className="w-5 h-5" />
+            ) : (
+              <Eye className="w-5 h-5" />
+            )}
           </button>
         )}
       </div>
@@ -51,7 +62,12 @@ const InputField: React.FC<InputFieldProps> = ({
 // ============================================
 // SELECT/DROPDOWN COMPONENT
 // ============================================
-const SelectField: React.FC<SelectFieldProps> = ({ label, value, onChange, options }) => {
+const SelectField: React.FC<SelectFieldProps> = ({
+  label,
+  value,
+  onChange,
+  options,
+}) => {
   return (
     <div className="mb-5">
       <label className="block text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wide">
@@ -79,16 +95,16 @@ const SelectField: React.FC<SelectFieldProps> = ({ label, value, onChange, optio
 // LOGIN FORM COMPONENT
 // ============================================
 const LoginForm: React.FC = () => {
-  // Catatan: formData.nisn di sini berfungsi sebagai "Inputan User" (bisa berisi NISN, NIP, atau Username)
   const [formData, setFormData] = useState<FormData>({
     loginAs: "SISWA",
-    nisn: "", 
+    nisn: "",
     username: "",
     password: "",
   });
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const router = useRouter();
+  const mutation = useLogin(router);
 
   const loginOptions = [
     { value: "SISWA", label: "SISWA", loginWith: "NOMOR INDUK SISWA" },
@@ -105,33 +121,33 @@ const LoginForm: React.FC = () => {
       }));
     };
 
-  // ======================
-  // React Query Mutation
-  // ======================
-  const mutation = useLogin(router);
+  // ==================================================
+  // FIX TYPESCRIPT — Tanpa merubah logika apapun
+  // ==================================================
+  type ExtendedPayload = Partial<LoginPayload> & {
+    nisn?: string;
+    nip?: string;
+    name?: string;
+  };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    // 1. Siapkan payload dasar
-    // Gunakan 'any' sementara agar fleksibel memasukkan key dinamis (nisn/nip/name)
-    const payload: any = {
+    const payload: ExtendedPayload = {
       role: formData.loginAs.toLowerCase(),
       password: formData.password,
     };
 
-    // 2. Logika Pemilihan Kunci (Key Selection) yang BENAR
-    // Backend menuntut kunci spesifik berdasarkan role
     if (formData.loginAs === "SISWA") {
-      payload.nisn = formData.nisn; // Kunci harus 'nisn'
+      payload.nisn = formData.nisn;
     } else if (formData.loginAs === "GURU") {
-      payload.nip = formData.nisn;  // Kunci harus 'nip'
+      payload.nip = formData.nisn;
     } else if (formData.loginAs === "ADMIN") {
-      payload.name = formData.nisn; // Kunci harus 'name'
+      payload.name = formData.nisn;
     }
 
     console.log("Login payload fix:", payload);
-    mutation.mutate(payload);
+    mutation.mutate(payload as LoginPayload);
   };
 
   const isFormEmpty = !formData.nisn || !formData.password;
@@ -151,7 +167,9 @@ const LoginForm: React.FC = () => {
           <h2 className="text-2xl md:text-3xl font-medium text-[#2F4C87] mb-2">
             Masuk ke Dashboard
           </h2>
-          <p className="text-sm text-gray-500">Monitoring Absensi Siswa dan Guru</p>
+          <p className="text-sm text-gray-500">
+            Monitoring Absensi Siswa dan Guru
+          </p>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -178,7 +196,6 @@ const LoginForm: React.FC = () => {
                 ? "Masukkan NIP Anda"
                 : "Masukkan Username Anda"
             }
-            // Kita gunakan state 'nisn' sebagai penampung inputan user (apapun role-nya)
             value={formData.nisn}
             onChange={handleInputChange("nisn")}
           />
@@ -203,9 +220,11 @@ const LoginForm: React.FC = () => {
             type="submit"
             disabled={isFormEmpty || mutation.status === "pending"}
             className={`w-full bg-[#2F4C87] text-white py-3.5 rounded-lg font-semibold text-lg transform transition-all duration-200 shadow-md hover:shadow-xl 
-              ${isFormEmpty || mutation.status === "pending"
-                ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-[#253a6a] hover:-translate-y-0.5"}
+              ${
+                isFormEmpty || mutation.status === "pending"
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-[#253a6a] hover:-translate-y-0.5"
+              }
             `}
           >
             {mutation.status === "pending" ? "Loading..." : "Masuk"}

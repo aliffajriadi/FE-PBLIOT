@@ -10,7 +10,7 @@ import AdminLayout from '../component/layout/Layout';
 const generateDummyData = (formData: LaporanFormData): LaporanData => {
   // Simulasi data berdasarkan form input
   const siswaCount = formData.kelas === 'Semua Kelas' ? 156 : 32;
-  const _hadir = Math.floor(siswaCount * 0.92);
+  // const _hadir = Math.floor(siswaCount * 0.92);
   const terlambat = 15;
   const alfa = 8;
 
