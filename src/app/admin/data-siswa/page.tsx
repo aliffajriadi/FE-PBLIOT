@@ -7,6 +7,14 @@ import TableHeaderControls from '../component/siswa/TableHeaderControls';
 import { useUsers } from '@/lib/hooks/useUser';
 
 export default function SiswaPage() {
+  // Tambahkan tipe ringan untuk perbaiki ESLint
+type SiswaUser = {
+  name: string;
+  nisn?: string;
+  role?: string;
+  [key: string]: unknown;
+};
+
   const [searchQuery, setSearchQuery] = useState('');
   
   // 1. PANGGIL API (Ambil data asli dari Database)
@@ -20,7 +28,7 @@ export default function SiswaPage() {
     if (data?.users) {
       // Ambil hanya user dengan role 'siswa'
       const students = data.users.filter(
-        (u: any) => u.role?.toLowerCase() === 'siswa'
+        (u: SiswaUser) => u.role?.toLowerCase() === 'siswa'
       );
 
       // Logika Pencarian (Search)
@@ -28,7 +36,7 @@ export default function SiswaPage() {
         const q = searchQuery.toLowerCase();
         setFilteredStudents(
           students.filter(
-            (s: any) =>
+            (s: SiswaUser) =>
               s.name.toLowerCase().includes(q) ||
               (s.nisn && s.nisn.toLowerCase().includes(q))
           )
