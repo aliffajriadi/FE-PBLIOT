@@ -5,7 +5,7 @@ import TeachersTable from '../component/guru/TableGuru';
 import TableHeaderControls from '../component/guru/TableHeaderControls';
 import { useState,useEffect } from 'react';
 import { useUsers } from '@/lib/hooks/useUser';
-import {Loading} from '@/components/Loading';
+import Loading from '@/components/Loading';
 import {Teacher} from '@/types/Guru';
 export default function TeachersPage() {
   const [searchQuery, setSearchQuery] = useState('');
