@@ -4,15 +4,19 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Save, X } from 'lucide-react';
 import { Teacher, TeacherFormData, FormErrors } from '@/types/Guru';
-import { createUser, updateUser } from "@/lib/api/user";
+import { useCreateUser,useUpdateUser } from '@/lib/hooks/useUser';
 import { getErrorMessage } from '@/utils/getErrorMessage';
-interface TeacherFormProps {
+
+interface TeacherFormProps {  
   mode: 'add' | 'edit';
   initialData?: Teacher;
 }
 
 export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
   const router = useRouter();
+  const { mutateAsync: mutateCreate, isPending: isCreating } = useCreateUser();
+  const { mutateAsync: mutateUpdate, isPending: isUpdating } = useUpdateUser();
+  const isSubmitting = isCreating || isUpdating;
   const [formData, setFormData] = useState<TeacherFormData>({
     id: '',
     nama: '',
@@ -22,7 +26,6 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
     role: 'guru', // default literal type
   });
   const [errors, setErrors] = useState<FormErrors>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (mode === 'edit' && initialData) {
@@ -52,8 +55,6 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
   e.preventDefault();
   if (!validateForm()) return;
 
-  setIsSubmitting(true);
-
   const payload = {
     name: formData.nama,
     role: formData.role,
@@ -62,23 +63,26 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
     nohp: formData.nohp,
     password: "",
   };
+  
 
   try {
     if (mode === 'add') {
       payload["password"] = "guru123";
-      await createUser(payload);
+      await mutateCreate(payload);
     } else if (mode === 'edit' && initialData?.id) {
-      await updateUser(Number(initialData.id), payload); // <= PANGGIL API UPDATE
+      await mutateUpdate({ 
+          id: Number(initialData.id), // ID yang dibutuhkan oleh useUpdateUser
+          data: payload 
+        });// <= PANGGIL API UPDATE
     }
 
     router.push("/admin/data-guru");
-  } catch (err: unknown) {
-    console.error(err);
-    alert(getErrorMessage ?? "Terjadi kesalahan");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+    } catch (err: unknown) {
+      console.error(err);
+      // getErrorMessage seringkali membutuhkan argumen err
+      alert(getErrorMessage(err) ?? "Terjadi kesalahan saat menyimpan data."); 
+    }
+  };
 
 
   const handleCancel = () => {

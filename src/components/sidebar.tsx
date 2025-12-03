@@ -27,11 +27,9 @@ const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, onClose }) => {
   const menus: Record<string, { label: string; icon: React.ComponentType<React.SVGProps<SVGSVGElement>>; href: string }[]> = { 
     admin: [
       { label: 'Dashboard', icon: LayoutDashboard, href: '/admin' },
-      { label: 'Data Kelas', icon: Building2, href: '/admin/data-kelas' },
       { label: 'Data Guru', icon: GraduationCap, href: '/admin/data-guru' },
       { label: 'Data Siswa', icon: Users, href: '/admin/data-siswa' },
       { label: 'Laporan Absensi', icon: Calendar, href: '/admin/laporan' },
-      { label: 'Pengaturan', icon: Settings, href: '/admin/settings' },
     ],
     guru: [
       { label: 'Dashboard', icon: LayoutDashboard, href: '/guru' },

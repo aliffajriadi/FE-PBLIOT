@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createUser, getUsers, updateUser, deleteUser, getUserById  } from "@/lib/api/user";
+import { createUser, getUsers, updateUser, deleteUser, getUserById,getCurrentUser  } from "@/lib/api/user";
 import { CreateUserPayload } from "@/types/user";
 
 export const useUsers = () => {
@@ -50,8 +50,22 @@ export const useUpdateUser = () => {
       id: number;
       data: Partial<CreateUserPayload>;
     }) => updateUser(id, data),
-    onSuccess: () => {
+    onSuccess: (data,variables) => {
       qc.invalidateQueries({ queryKey: ["users"] });
+      qc.invalidateQueries({ queryKey: ["user", variables.id] });
+    },
+    onError: (error: unknown) => { // <=== TAMBAHKAN PENANGANAN ERROR DI SINI
+      if (error instanceof Error) {
+        console.error("Update user failed:", error.message);
+        alert(error.message);
+      } else if (typeof error === "object" && error !== null && "response" in error) {
+        const err = error as { response?: { data?: { message?: string } } };
+        console.error("Update user failed:", err.response?.data || err);
+        alert(err.response?.data?.message || "Gagal memperbarui user");
+      } else {
+        console.error("Update user failed:", error);
+        alert("Gagal memperbarui user");
+      }
     },
   });
 };
@@ -73,5 +87,12 @@ export const useUserById = (id: number) => {
     queryKey: ["user", id],
     queryFn: () => getUserById(id), // Atau pakai endpoint khusus getUserById
     enabled: !!id, // hanya fetch kalau id ada
+  });
+};
+
+export const useCurrentUser = () => {
+   return useQuery({
+    queryKey: ["currentUser"],
+    queryFn: () => getCurrentUser(), 
   });
 };

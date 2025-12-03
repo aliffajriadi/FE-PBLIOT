@@ -35,3 +35,8 @@ export const deleteUser = async (id: number) => {
   const res = await api.delete(`/user/${id}`, { withCredentials: true });
   return res.data.data;
 };
+
+export const getCurrentUser = async () => {
+  const res = await api.get("/user/profile/me", { withCredentials: true });
+  return res.data.data; 
+};

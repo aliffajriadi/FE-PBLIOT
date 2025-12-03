@@ -4,16 +4,13 @@ import { motion } from "framer-motion";
 import { Settings } from "lucide-react";
 import InfoProfil from "./InfoProfil";
 import UbahPassword from "./UbahPassword";
-
-// Mock profile
-const mockProfile = {
-  nama: "Muhammad Raihan",
-  nisn: "1985031520101",
-  noHp: "082170251116",
-  uidRfid: "A1:B2:C3:D4:E5",
-};
+import { useCurrentUser } from "@/lib/hooks/useUser";
 
 export default function SettingProfilSiswa() {
+
+  const { data: user, isLoading } = useCurrentUser();
+
+  if (isLoading) return <div>Loading...</div>;
   return (
     <motion.div
       className="space-y-8"
@@ -27,7 +24,12 @@ export default function SettingProfilSiswa() {
       </h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <InfoProfil {...mockProfile} />
+        <InfoProfil 
+          name={user.name} 
+          nisn={user.nisn} 
+          nohp={user.nohp || "-"} 
+          rfid={user.rfid?.rfid}
+        />
         <UbahPassword />
       </div>
     </motion.div>

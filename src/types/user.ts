@@ -22,4 +22,12 @@ export interface CreateUserPayload {
   nisn?: string;     // hanya siswa
   password: string;
   rfidCode?: string; // wajib untuk guru/siswa
+  rfid?: string;  
+}
+
+export interface SiswaProfilInfoProps {
+  name: string;
+  nisn: string;
+  nohp?: string;
+  rfid: string;
 }

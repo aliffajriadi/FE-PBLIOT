@@ -1,15 +1,9 @@
 "use client";
 
 import { User } from "lucide-react";
+import { SiswaProfilInfoProps } from "@/types/user";
 
-interface ProfilInfoProps {
-  nama: string;
-  nisn: string;
-  noHp: string;
-  uidRfid: string;
-}
-
-export default function InfoProfil({ nama, nisn, noHp, uidRfid }: ProfilInfoProps) {
+export default function InfoProfil({ name, nisn, nohp, rfid }: SiswaProfilInfoProps) {
   return (
     <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 space-y-6">
       <div className="flex items-center gap-3 border-b pb-4 mb-2">
@@ -20,7 +14,7 @@ export default function InfoProfil({ nama, nisn, noHp, uidRfid }: ProfilInfoProp
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap:</label>
         <p className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm font-semibold text-gray-800">
-          {nama}
+          {name}
         </p>
       </div>
 
@@ -34,14 +28,14 @@ export default function InfoProfil({ nama, nisn, noHp, uidRfid }: ProfilInfoProp
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">No. HP:</label>
         <p className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm font-semibold text-gray-800">
-          {noHp}
+          {nohp}
         </p>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">UID RFID:</label>
         <div className="w-full bg-indigo-50 border border-indigo-200 rounded-lg p-3 text-sm font-mono font-semibold text-primary-800 shadow-inner">
-          {uidRfid}
+          {rfid}
         </div>
       </div>
     </div>
