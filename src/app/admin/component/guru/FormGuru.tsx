@@ -64,6 +64,13 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
     password: "",
   };
   
+    const Updatepayload = {
+    name: formData.nama,
+    role: formData.role,
+    nip: formData.nip,
+    rfidCode: formData.rfidCode,
+    nohp: formData.nohp,
+  };
 
   try {
     if (mode === 'add') {
@@ -72,7 +79,7 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
     } else if (mode === 'edit' && initialData?.id) {
       await mutateUpdate({ 
           id: Number(initialData.id), // ID yang dibutuhkan oleh useUpdateUser
-          data: payload 
+          data: Updatepayload 
         });// <= PANGGIL API UPDATE
     }
 

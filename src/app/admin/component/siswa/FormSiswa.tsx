@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Save, X } from 'lucide-react';
-import { createUser, updateUser } from "@/lib/api/user";
+import { useCreateUser,useUpdateUser } from '@/lib/hooks/useUser';
 import { Siswa , SiswaFormData, FormErrors} from '@/types/Siswa';
 import React from 'react';
 import { getErrorMessage } from '@/utils/getErrorMessage';
@@ -15,6 +15,9 @@ interface SiswaFormProps {
 
 export default function SiswaForm({ mode, initialData }: SiswaFormProps) {
   const router = useRouter();
+  const { mutateAsync: mutateCreate, isPending: isCreating } = useCreateUser();
+  const { mutateAsync: mutateUpdate, isPending: isUpdating } = useUpdateUser();
+  const isSubmitting = isCreating || isUpdating;
   
   const [formData, setFormData] = useState<SiswaFormData>({
     nisn: '',
@@ -24,7 +27,6 @@ export default function SiswaForm({ mode, initialData }: SiswaFormProps) {
   });
   
   const [errors, setErrors] = useState<FormErrors>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // ============================================================
   // 1. LOAD DATA SAAT EDIT
@@ -68,10 +70,16 @@ export default function SiswaForm({ mode, initialData }: SiswaFormProps) {
     e.preventDefault();
     if (!validateForm()) return;
 
-    setIsSubmitting(true);
 
     // 1. Data dasar yang sama untuk Add maupun Edit
     const basePayload = {
+      name: formData.name,
+      role: 'siswa' as const,
+      nisn: formData.nisn,
+      rfidCode: formData.rfid ,
+      nohp: formData.nohp,
+    };
+    const updatePayload = {
       name: formData.name,
       role: 'siswa' as const,
       nisn: formData.nisn,
@@ -85,7 +93,7 @@ export default function SiswaForm({ mode, initialData }: SiswaFormProps) {
       if (mode === 'add') {
         // === MODE TAMBAH (Wajib Password) ===
         // Kita rangkai objectnya langsung di sini agar TypeScript paham ada passwordnya
-        await createUser({
+        await mutateCreate({
           ...basePayload,
           password: "siswa123" 
         });
@@ -95,7 +103,10 @@ export default function SiswaForm({ mode, initialData }: SiswaFormProps) {
         // === MODE EDIT (Tanpa Password) ===
         // Kirim basePayload saja.
         // Note: Backend update biasanya tidak mewajibkan password
-        await updateUser(Number(initialData.id), basePayload);
+        await mutateUpdate({ 
+          id: Number(initialData.id), // ID yang dibutuhkan oleh useUpdateUser
+          data: updatePayload 
+        });
         alert("Berhasil Mengupdate Siswa! 🎉");
       }
 
@@ -105,7 +116,7 @@ export default function SiswaForm({ mode, initialData }: SiswaFormProps) {
       const msg = getErrorMessage(err);
       alert("Gagal: " + msg);
     } finally {
-      setIsSubmitting(false);
+      // Optional: Reset loading state or other cleanup
     }
   };
 

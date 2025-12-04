@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 export default function StatistikKehadiran() {
   const data = [
     { label: "Kehadiran (Bulan ini)", value: "90%" },
-    { label: "Total Terlambat (Bulan ini)", value: "3" },
+    { label: "Total Alfa (Bulan ini)", value: "3" },
   ];
 
   return (
