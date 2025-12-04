@@ -7,7 +7,7 @@ import { useCreateUser,useUpdateUser } from '@/lib/hooks/useUser';
 import { Siswa , SiswaFormData, FormErrors} from '@/types/Siswa';
 import React from 'react';
 import { getErrorMessage } from '@/utils/getErrorMessage';
-
+import { toast } from "sonner";
 interface SiswaFormProps {
   mode: 'add' | 'edit';
   initialData?: Siswa; 
@@ -87,8 +87,6 @@ export default function SiswaForm({ mode, initialData }: SiswaFormProps) {
       nohp: formData.nohp,
     };
 
-    console.log("Base Payload:", basePayload);
-
     try {
       if (mode === 'add') {
         // === MODE TAMBAH (Wajib Password) ===
@@ -97,7 +95,7 @@ export default function SiswaForm({ mode, initialData }: SiswaFormProps) {
           ...basePayload,
           password: "siswa123" 
         });
-        alert("Berhasil Menambah Siswa! 🎉");
+        toast.success("Data guru berhasil dibuat!");
 
       } else if (mode === 'edit' && initialData?.id) {
         // === MODE EDIT (Tanpa Password) ===
@@ -107,7 +105,7 @@ export default function SiswaForm({ mode, initialData }: SiswaFormProps) {
           id: Number(initialData.id), // ID yang dibutuhkan oleh useUpdateUser
           data: updatePayload 
         });
-        alert("Berhasil Mengupdate Siswa! 🎉");
+        toast.success("Data guru berhasil diperbarui!");
       }
 
       router.push('/admin/data-siswa');

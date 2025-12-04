@@ -145,8 +145,6 @@ const LoginForm: React.FC = () => {
     } else if (formData.loginAs === "ADMIN") {
       payload.name = formData.nisn;
     }
-
-    console.log("Login payload fix:", payload);
     mutation.mutate(payload as LoginPayload);
   };
 

@@ -6,6 +6,7 @@ import { Save, X } from 'lucide-react';
 import { Teacher, TeacherFormData, FormErrors } from '@/types/Guru';
 import { useCreateUser,useUpdateUser } from '@/lib/hooks/useUser';
 import { getErrorMessage } from '@/utils/getErrorMessage';
+import { toast } from "sonner";
 
 interface TeacherFormProps {  
   mode: 'add' | 'edit';
@@ -61,7 +62,7 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
     nip: formData.nip,
     rfidCode: formData.rfidCode,
     nohp: formData.nohp,
-    password: "",
+    password: "guru123",
   };
   
     const Updatepayload = {
@@ -74,13 +75,14 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
 
   try {
     if (mode === 'add') {
-      payload["password"] = "guru123";
       await mutateCreate(payload);
+      toast.success("Data guru berhasil dibuat!");
     } else if (mode === 'edit' && initialData?.id) {
       await mutateUpdate({ 
           id: Number(initialData.id), // ID yang dibutuhkan oleh useUpdateUser
           data: Updatepayload 
-        });// <= PANGGIL API UPDATE
+        });
+      toast.success("Data guru berhasil diperbarui!");
     }
 
     router.push("/admin/data-guru");
