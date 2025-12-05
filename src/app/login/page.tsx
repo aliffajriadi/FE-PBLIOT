@@ -1,22 +1,22 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import LoginForm from "./component/FormLogin";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
-const LoginPage: React.FC = () => {
+const LoginPage = () => {
   const params = useSearchParams();
   const error = params.get("error");
 
   useEffect(() => {
-  if (!error) return;
-
-  setTimeout(() => {
-    if (error === "unauthorized") toast.error("Anda tidak memiliki akses");
-    if (error === "unauth") toast.error("Anda belum login");
-  }, 50);
-}, [error]);
+    if (!error) return;
+    setTimeout(() => {
+      if (error === "unauthorized") toast.error("Anda tidak memiliki akses");
+      if (error === "unauth") toast.error("Anda belum login");
+    }, 50);
+  }, [error]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-blue-50 to-indigo-100 flex flex-col">
