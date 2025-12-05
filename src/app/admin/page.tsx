@@ -3,8 +3,11 @@ import SummaryCards from './component/dashboard/SummaryCards';
 import AttendanceChart from './component/dashboard/AttendanceChart';
 import RecentActivity from './component/dashboard/RecentActivity';
 import QuickActions from './component/dashboard/QuickActions';
+import { Suspense } from 'react';
+import Loading from '@/components/Loading';
 const DashboardAdminPage = () => {
   return (
+    <Suspense fallback={<Loading />}>
     <AdminLayout>
       <SummaryCards />
       
@@ -19,6 +22,7 @@ const DashboardAdminPage = () => {
 
       <QuickActions />
     </AdminLayout>
+    </Suspense>
   )
 }
 

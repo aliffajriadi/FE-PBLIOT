@@ -14,7 +14,6 @@ export function middleware(req: NextRequest) {
   const payload = JSON.parse(
     Buffer.from(token.split(".")[1], "base64").toString()
   );
-  console.log("PAYLOAD:", payload);
 
   const role = payload.role;
 

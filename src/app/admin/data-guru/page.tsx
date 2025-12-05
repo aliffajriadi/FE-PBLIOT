@@ -6,6 +6,9 @@ import TableHeaderControls from '../component/guru/TableHeaderControls';
 import { useState,useEffect } from 'react';
 import { useUsers } from '@/lib/hooks/useUser';
 import {Teacher} from '@/types/Guru';
+import { Suspense } from 'react';
+import Loading from '@/components/Loading';
+
 export default function TeachersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const { data, isError } = useUsers(); // fetch semua users
@@ -36,11 +39,13 @@ export default function TeachersPage() {
   if (isError) return <div>Error loading data.</div>;
 
   return (
+    <Suspense fallback={<Loading />}>
     <AdminLayout>
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
         <TableHeaderControls onSearch={setSearchQuery} />
         <TeachersTable data={filteredTeachers} />
       </div>
     </AdminLayout>
+    </Suspense>
   );
 }
