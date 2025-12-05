@@ -15,7 +15,6 @@ export const useCreateUser = () => {
 
   return useMutation({
     mutationFn: (data: CreateUserPayload) => {
-      console.log("sending data:", data);
       return createUser(data);
     },
     onSuccess: () => {
