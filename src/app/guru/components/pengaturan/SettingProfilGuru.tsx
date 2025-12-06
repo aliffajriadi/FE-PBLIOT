@@ -8,7 +8,7 @@ import { useCurrentUser } from "@/lib/hooks/useUser";
 
 export default function SettingProfilGuru() {
 
-  const { data: user, isLoading } = useCurrentUser();
+  const { data: user } = useCurrentUser();
   return (
     <motion.div
       className="space-y-8"
