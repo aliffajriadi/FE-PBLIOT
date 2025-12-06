@@ -4,8 +4,6 @@ import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { LoginPayload } from "@/types/login";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
-
 export const useLogin = (router:ReturnType<typeof useRouter>) => {
   return useMutation({
     mutationFn: (payload: LoginPayload) => LoginRequest(payload),
@@ -13,17 +11,6 @@ export const useLogin = (router:ReturnType<typeof useRouter>) => {
     onSuccess: (user) => {
       if (!user) {
         toast.error("Data user tidak ditemukan!");
-        return;
-      }
-
-      if (user.token) {
-        Cookies.set("token", user.token, { 
-          expires: 1, // Expire 1 hari
-          path: "/"   // Wajib ada agar bisa dibaca Middleware di semua halaman
-        });
-      } else {
-        console.error("Token tidak ditemukan di response:", user);
-        toast.error("Gagal menyimpan sesi login");
         return;
       }
 
