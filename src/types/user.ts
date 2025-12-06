@@ -31,3 +31,10 @@ export interface SiswaProfilInfoProps {
   nohp?: string;
   rfid: string;
 }
+
+export interface ProfilInfoProps {
+  name: string;
+  nip: string;
+  nohp?: string;
+  uidRfid: string;
+}

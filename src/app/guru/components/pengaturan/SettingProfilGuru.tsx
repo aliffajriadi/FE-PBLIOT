@@ -4,16 +4,11 @@ import { motion } from "framer-motion";
 import { Settings } from "lucide-react";
 import ProfilInfo from "./ProfilInfo";
 import UbahPassword from "./UbahPassword";
-
-// Mock profile
-const mockProfile = {
-  nama: "Dr. Yuki, S.KOM, M.KOM, PHD",
-  nip: "198503152010011001",
-  noHp: "082170251116",
-  uidRfid: "A1:B2:C3:D4:E5",
-};
+import { useCurrentUser } from "@/lib/hooks/useUser";
 
 export default function SettingProfilGuru() {
+
+  const { data: user, isLoading } = useCurrentUser();
   return (
     <motion.div
       className="space-y-8"
@@ -27,7 +22,12 @@ export default function SettingProfilGuru() {
       </h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <ProfilInfo {...mockProfile} />
+        <ProfilInfo 
+          name={user.name} 
+          nip={user.nip} 
+          nohp={user.nohp || "-"} 
+          uidRfid={user.rfid?.rfid}
+        />
         <UbahPassword />
       </div>
     </motion.div>
