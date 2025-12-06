@@ -1,4 +1,3 @@
-"use client";
 import Header from "../components/layout/layout";
 import SettingProfilGuru from "../components/pengaturan/SettingProfilGuru";
 

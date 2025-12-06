@@ -7,8 +7,7 @@ import UbahPassword from "./UbahPassword";
 import { useCurrentUser } from "@/lib/hooks/useUser";
 
 export default function SettingProfilGuru() {
-
-  const { data: user } = useCurrentUser();
+  const { data } = useCurrentUser();
   return (
     <motion.div
       className="space-y-8"
@@ -22,12 +21,13 @@ export default function SettingProfilGuru() {
       </h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <ProfilInfo 
-          name={user.name} 
-          nip={user.nip} 
-          nohp={user.nohp || "-"} 
-          uidRfid={user.rfid?.rfid}
+        <ProfilInfo
+          name={data?.name ?? "-"}
+          nip={data?.nip ?? "-"}
+          nohp={data?.nohp ?? "-"}
+          uidRfid={data?.rfid?.rfid ?? "-"}
         />
+
         <UbahPassword />
       </div>
     </motion.div>
