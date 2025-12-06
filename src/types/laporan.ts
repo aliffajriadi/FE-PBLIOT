@@ -27,4 +27,5 @@ export interface LaporanFormData {
   siswa: string;
 }
 
+
 export type PeriodeType = 'Harian' | 'Mingguan' | 'Bulanan';
