@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createUser, getUsers, updateUser, deleteUser, getUserById,getCurrentUser  } from "@/lib/api/user";
+import { createUser, getUsers, updateUser, deleteUser, getUserById,getCurrentUser, getUserParams  } from "@/lib/api/user";
 import { CreateUserPayload } from "@/types/user";
 
 export const useUsers = () => {
@@ -7,6 +7,14 @@ export const useUsers = () => {
     queryKey: ["users"],
     queryFn: getUsers,
     
+  });
+};
+
+export const useUserQuery = (page: string, limit: string, role: "guru" | "siswa") => {
+  return useQuery({
+    queryKey: ["userParams", page, limit, role],
+    queryFn: () => getUserParams(page, limit, role), // 3 argumen terpisah
+    staleTime: 1000 * 60,
   });
 };
 

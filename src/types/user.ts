@@ -32,6 +32,7 @@ export interface SiswaProfilInfoProps {
   rfid: string;
 }
 
+
 export interface ProfilInfoProps {
   name: string;
   nip: string;

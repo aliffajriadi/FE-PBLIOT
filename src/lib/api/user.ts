@@ -21,6 +21,11 @@ export const getUsers = async () => {
   return res.data.data;
 };
 
+export const getUserParams = async (page: string, limit: string, role: "guru" | "siswa") => {
+  const res = await api.get(`/user?page=${page}&limit=${limit}&role=${role}`, { withCredentials: true });
+  return res.data.data;
+}
+
 export const getUserById = async (id: number) => {
   const res = await api.get(`/user/${id}`, { withCredentials: true });
   return res.data.data;
