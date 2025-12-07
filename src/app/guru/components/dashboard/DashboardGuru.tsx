@@ -18,17 +18,18 @@ export default function DashboardGuru() {
       <GreetingCard />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
         <div className="lg:col-span-2">
           <RealTimeMonitor
             selectedClass={selectedClass}
             setSelectedClass={setSelectedClass}
           />
         </div>
+
         <div>
           <TeachingSchedule />
         </div>
       </div>
-
       <StudentTable selectedClass={selectedClass} />
     </div>
   );
