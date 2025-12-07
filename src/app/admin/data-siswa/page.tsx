@@ -1,84 +1,79 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import AdminLayout from '../component/layout/Layout';
-import SiswaTable from '../component/siswa/TableSiswa';
-import TableHeaderControls from '../component/siswa/TableHeaderControls';
-import { useUsers } from '@/lib/hooks/useUser';
+import { useState } from "react";
+import AdminLayout from "../component/layout/Layout";
+import SiswaTable from "../component/siswa/TableSiswa";
+import TableHeaderControls from "../component/siswa/TableHeaderControls";
+import { useUserQuery } from "@/lib/hooks/useUser";
+import SkeletonTable from "@/components/SkeletonTable";
+import { Siswa } from "@/types/Siswa";
 
 export default function SiswaPage() {
-  // Tambahkan tipe ringan untuk perbaiki ESLint
-type SiswaUser = {
-  name: string;
-  nisn?: string;
-  role?: string;
-  [key: string]: unknown;
-};
+  const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10); // jumlah data per halaman
 
-  const [searchQuery, setSearchQuery] = useState('');
-  
-  // 1. PANGGIL API (Ambil data asli dari Database)
-  // useUsers() akan mengambil semua user (admin, guru, siswa) dari backend
-  const { data, isLoading, isError } = useUsers(); 
-  
-  const [filteredStudents, setFilteredStudents] = useState([]);
-
-  // 2. FILTER DATA (Hanya ambil yang role-nya 'siswa')
-  useEffect(() => {
-    if (data?.users) {
-      // Ambil hanya user dengan role 'siswa'
-      const students = data.users.filter(
-        (u: SiswaUser) => u.role?.toLowerCase() === 'siswa'
-      );
-
-      // Logika Pencarian (Search)
-      if (searchQuery) {
-        const q = searchQuery.toLowerCase();
-        setFilteredStudents(
-          students.filter(
-            (s: SiswaUser) =>
-              s.name.toLowerCase().includes(q) ||
-              (s.nisn && s.nisn.toLowerCase().includes(q))
-          )
-        );
-      } else {
-        setFilteredStudents(students);
-      }
-    }
-  }, [data, searchQuery]);
-
-  if (isLoading) return (
-    <AdminLayout>
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center">
-            Loading data siswa...
-        </div>
-    </AdminLayout>
+  // Panggil API
+  const { data, isLoading, isError } = useUserQuery(
+    page.toString(),
+    limit.toString(),
+    "siswa"
   );
 
-  if (isError) return (
-    <AdminLayout>
+  // Filter data berdasarkan search
+  const filteredStudents =
+    data?.users.filter(
+      (s: Siswa) =>
+        s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (s.nisn && s.nisn.toLowerCase().includes(searchQuery.toLowerCase()))
+    ) || [];
+
+  // Total pages dari backend
+  const totalPages = data?.total ? Math.ceil(data.total / limit) : 1;
+
+  if (isLoading)
+    return (
+      <AdminLayout>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div className="flex justify-between items-center pb-4">
+            <h3 className="text-2xl font-bold text-primary">Data Siswa</h3>
+            <p className="text-gray-500 animate-pulse text-sm">
+              Sedang Memuat Data....
+            </p>
+          </div>
+          <SkeletonTable rows={10} cols={6} />
+        </div>
+      </AdminLayout>
+    );
+
+  if (isError)
+    return (
+      <AdminLayout>
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center text-red-500">
-            Gagal mengambil data. Pastikan backend menyala.
+          Gagal mengambil data. Pastikan backend menyala.
         </div>
-    </AdminLayout>
-  );
+      </AdminLayout>
+    );
 
   return (
     <AdminLayout>
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        {/* Header dengan Pencarian & Tombol Tambah */}
-        {/* Pastikan link addButtonLink mengarah ke form tambah siswa */}
-        <TableHeaderControls 
-            onSearch={setSearchQuery} 
-            title="Data Siswa"
-            addButtonLink="/admin/data-siswa/add" 
-            addButtonLabel="Tambah Siswa"
+        <TableHeaderControls
+          onSearch={setSearchQuery}
+          title="Data Siswa"
+          addButtonLink="/admin/data-siswa/add"
+          addButtonLabel="Tambah Siswa"
         />
-        
-        {/* Tabel Data Asli */}
-        {/* Mengirim data siswa yang sudah difilter ke komponen tabel */}
+
         <div className="mt-6">
-            <SiswaTable data={filteredStudents} />
+          <SiswaTable
+            data={filteredStudents}
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            totalData={data.total}
+            limit={limit}
+          />
         </div>
       </div>
     </AdminLayout>

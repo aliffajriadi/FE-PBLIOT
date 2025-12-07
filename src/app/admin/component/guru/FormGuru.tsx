@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import { Save, X } from 'lucide-react';
 import { Teacher, TeacherFormData, FormErrors } from '@/types/Guru';
 import { useCreateUser,useUpdateUser } from '@/lib/hooks/useUser';
-import { getErrorMessage } from '@/utils/getErrorMessage';
 import { toast } from "sonner";
+import { useQueryClient } from '@tanstack/react-query';
 
 interface TeacherFormProps {  
   mode: 'add' | 'edit';
@@ -15,6 +15,8 @@ interface TeacherFormProps {
 
 export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
+
   const { mutateAsync: mutateCreate, isPending: isCreating } = useCreateUser();
   const { mutateAsync: mutateUpdate, isPending: isUpdating } = useUpdateUser();
   const isSubmitting = isCreating || isUpdating;
@@ -84,12 +86,12 @@ export default function TeacherForm({ mode, initialData }: TeacherFormProps) {
         });
       toast.success("Data guru berhasil diperbarui!");
     }
-
     router.push("/admin/data-guru");
     } catch (err: unknown) {
       console.error(err);
-      // getErrorMessage seringkali membutuhkan argumen err
-      alert(getErrorMessage(err) ?? "Terjadi kesalahan saat menyimpan data."); 
+      toast.error("Gagal menambahkan data guru");
+    } finally {
+      queryClient.invalidateQueries({ queryKey: ['userParams'] });
     }
   };
 

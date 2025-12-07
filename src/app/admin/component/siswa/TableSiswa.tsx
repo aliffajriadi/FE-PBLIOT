@@ -5,49 +5,38 @@ import { useRouter } from 'next/navigation';
 import { useDeleteUser } from '@/lib/hooks/useUser';
 import { useState } from 'react';
 import ConfirmDeleteModal from '@/components/ConfirmDeleteModal';
-import { Siswa } from '@/types/Siswa'; 
+import { Siswa } from '@/types/Siswa';
 import { getErrorMessage } from '@/utils/getErrorMessage';
-import { toast } from "sonner"; // Import Sonner
+import { toast } from 'sonner';
 
 interface TableSiswaProps {
   data: Siswa[];
+  page: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+  totalData: number;
+  limit: number;
 }
 
-export default function TableSiswa({ data }: TableSiswaProps) {
+export default function TableSiswa({
+  data,
+  page,
+  totalPages,
+  onPageChange,
+  totalData,
+  limit,
+}: TableSiswaProps) {
   const router = useRouter();
-
-  // --- STATE PAGINATION ---
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // Ubah angka ini sesuai kebutuhan
-
-  // --- STATE LAINNYA ---
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [showModal, setShowModal] = useState(false); 
+  const [showModal, setShowModal] = useState(false);
 
-  // --- LOGIKA PAGINATION ---
-  const totalPages = Math.ceil(data.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentData = data.slice(startIndex, endIndex);
-
-  // Handler Ganti Halaman
-  const goToPage = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
-  // --- NAVIGASI ---
-  const handleEdit = (id: number) => router.push(`/admin/data-siswa/${id}/edit`);
-  
-  // --- DELETE LOGIC ---
   const deleteUserMutation = useDeleteUser();
 
   const handleConfirmDelete = (id: number) => {
     setSelectedId(id);
     setShowModal(true);
   };
-  
+
   const handleDelete = () => {
     if (!selectedId) return;
 
@@ -55,32 +44,32 @@ export default function TableSiswa({ data }: TableSiswaProps) {
       onSuccess: () => {
         setShowModal(false);
         setSelectedId(null);
-        
         toast.success("Data siswa berhasil dihapus");
 
-        // Cek jika halaman jadi kosong setelah hapus, mundur 1 halaman
-        if (currentData.length === 1 && currentPage > 1) {
-            setCurrentPage(prev => prev - 1);
+        // jika halaman kosong setelah hapus, mundur 1 halaman
+        if (data.length === 1 && page > 1) {
+          onPageChange(page - 1);
+        } else {
+          onPageChange(page); // refresh halaman sekarang
         }
       },
       onError: (err: unknown) => {
-        console.error(err);
         const msg = getErrorMessage(err);
-        toast.error("Gagal menghapus siswa", {
-            description: msg
-        });
+        toast.error("Gagal menghapus siswa", { description: msg });
       },
     });
   };
 
-  // State Kosong
-  if (!data || data.length === 0) {
+  const handleEdit = (id: number) =>
+    router.push(`/admin/data-siswa/${id}/edit`);
+
+  if (!data || data.length === 0)
     return (
-      <div className="text-center py-12 text-gray-500">
-        Tidak ada data siswa
-      </div>
+      <div className="text-center py-12 text-gray-500">Tidak ada data siswa</div>
     );
-  }
+
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + data.length;
 
   return (
     <>
@@ -88,46 +77,43 @@ export default function TableSiswa({ data }: TableSiswaProps) {
         <table className="w-full border border-gray-200 rounded-xl shadow-sm min-w-[600px]">
           <thead className="bg-gray-50">
             <tr>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">ID Siswa</th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">NISN</th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">Nama Siswa</th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">Kontak Orang Tua</th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">UID RFID</th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-700">Aksi</th>
+              <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                ID Siswa
+              </th>
+              <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                NISN
+              </th>
+              <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                Nama Siswa
+              </th>
+              <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                Kontak Orang Tua
+              </th>
+              <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                UID RFID
+              </th>
+              <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                Aksi
+              </th>
             </tr>
           </thead>
           <tbody>
-            {currentData.map((siswa : Siswa, index : number) => (
+            {data.map((siswa: Siswa, idx: number) => (
               <tr
                 key={siswa.id}
                 className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
               >
-                {/* 0. ID Siswa (Disesuaikan dengan halaman aktif) */}
                 <td className="py-4 px-4 font-mono text-sm text-gray-600">
-                  {`S00${startIndex + index + 1}`}
+                  {`S00${startIndex + idx + 1}`}
                 </td>
-
-                {/* 1. NISN */}
                 <td className="py-4 px-4 font-mono text-sm text-gray-600">
-                  {siswa.nisn ?? '-' }
+                  {siswa.nisn ?? '-'}
                 </td>
-
-                {/* 2. Nama Siswa */}
-                <td className="py-4 px-4 font-medium text-gray-800">
-                  {siswa.name}
-                </td>
-
-                {/* 3. Kontak Ortu */}
-                <td className="py-4 px-4 text-gray-600">
-                  {siswa.nohp}
-                </td>
-
-                {/* 4. UID RFID */}
+                <td className="py-4 px-4 font-medium text-gray-800">{siswa.name}</td>
+                <td className="py-4 px-4 text-gray-600">{siswa.nohp}</td>
                 <td className="py-4 px-4 font-mono text-sm text-gray-600">
                   {siswa.rfid?.rfid || '-'}
                 </td>
-
-                {/* 5. Aksi */}
                 <td className="py-4 px-4">
                   <div className="flex items-center gap-2">
                     <button
@@ -152,48 +138,44 @@ export default function TableSiswa({ data }: TableSiswaProps) {
         </table>
       </div>
 
-      {/* --- FOOTER PAGINATION --- */}
+      {/* Pagination */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-4 px-2">
         <p className="text-sm text-gray-500">
-          Menampilkan <span className="font-medium text-gray-900">{data.length > 0 ? startIndex + 1 : 0}</span> sampai{' '}
-          <span className="font-medium text-gray-900">
-            {Math.min(endIndex, data.length)}
-          </span>{' '}
-          dari <span className="font-medium text-gray-900">{data.length}</span> data
+          Menampilkan <span className="font-medium text-gray-900">{startIndex + 1}</span> sampai{' '}
+          <span className="font-medium text-gray-900">{endIndex}</span> dari{' '}
+          <span className="font-medium text-gray-900">{totalData}</span> data
         </p>
 
         <div className="flex items-center gap-2">
-            <button
-            onClick={() => goToPage(currentPage - 1)}
-            disabled={currentPage === 1}
+          <button
+            onClick={() => onPageChange(page - 1)}
+            disabled={page === 1}
             className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
+          >
             <ChevronLeft className="w-4 h-4" />
-            </button>
+          </button>
 
-            <div className="flex items-center gap-1">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                key={page}
-                onClick={() => goToPage(page)}
+          <div className="flex items-center gap-1">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+              <button
+                key={p}
+                onClick={() => onPageChange(p)}
                 className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
-                    currentPage === page
-                    ? 'bg-primary text-white' 
-                    : 'text-gray-600 hover:bg-gray-100'
+                  page === p ? 'bg-primary text-white' : 'text-gray-600 hover:bg-gray-100'
                 }`}
-                >
-                {page}
-                </button>
+              >
+                {p}
+              </button>
             ))}
-            </div>
+          </div>
 
-            <button
-            onClick={() => goToPage(currentPage + 1)}
-            disabled={currentPage === totalPages}
+          <button
+            onClick={() => onPageChange(page + 1)}
+            disabled={page === totalPages}
             className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
+          >
             <ChevronRight className="w-4 h-4" />
-            </button>
+          </button>
         </div>
       </div>
 

@@ -30,7 +30,7 @@ export function proxy(req: NextRequest) {
     const base64 = token.split(".")[1];
     const json = atob(base64);
     payload = JSON.parse(json);
-  } catch (e) {
+  } catch {
     return NextResponse.redirect(
       new URL("/login?error=invalid_token", req.url)
     );
