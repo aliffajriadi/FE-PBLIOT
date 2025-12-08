@@ -72,7 +72,7 @@ export default function TableSiswa({
       : `https://jokilek.diskon.com/storage/files/${finalPhoto}`;
 
   return (
-    <div className="relative w-[50px] h-[50px]">
+    <div className="relative w-[50px] h-[50px] overflow-hidden rounded-full">
       {isLoading && (
         <div className="absolute inset-0 rounded-full bg-gray-200 animate-pulse" />
       )}
@@ -137,7 +137,7 @@ export default function TableSiswa({
                 key={siswa.id}
                 className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
               >
-                <td className="py-4 px-4 font-mono text-sm text-gray-600">
+                <td className="py-4 px-4 font-mono text-sm overflow-hidden text-gray-600">
                   <FotoSiswa photo={siswa.photo} name={siswa.name} />
                 </td>
                 <td className="py-4 px-4 font-mono text-sm text-gray-600">

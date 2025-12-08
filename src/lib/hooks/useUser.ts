@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createUser, getUsers, updateUser, searchUser, deleteUser, getUserById,getCurrentUser, getUserParams  } from "@/lib/api/user";
+import { createUser, getUsers, updateUser, updatePhoto, searchUser, updateProfile, deleteUser, getUserById,getCurrentUser, getUserParams  } from "@/lib/api/user";
 import { CreateUserPayload } from "@/types/user";
+import { toast } from "sonner";
 
 export const useUsers = () => {
   return useQuery({
@@ -60,6 +61,7 @@ export const useUpdateUser = () => {
     onSuccess: (data,variables) => {
       qc.invalidateQueries({ queryKey: ["users"] });
       qc.invalidateQueries({ queryKey: ["user", variables.id] });
+      qc.invalidateQueries({ queryKey: ["userParams"] });
     },
     onError: (error: unknown) => { // <=== TAMBAHKAN PENANGANAN ERROR DI SINI
       if (error instanceof Error) {
@@ -101,16 +103,48 @@ export const useCurrentUser = () => {
    return useQuery({
     queryKey: ["currentUser"],
     queryFn: () => getCurrentUser(), 
+    staleTime: 1000 * 60,
   });
 };
 
 export const useSearchUser = (page: string, limit: string, query: string, role: "guru" | "siswa") => {
-  console.log('Query:', query);
   return useQuery({
     queryKey: ["searchUser", page, limit, query, role],
     queryFn: () => searchUser(page, limit, query, role),
     enabled: query.length > 0,
     staleTime: 1000,
     refetchOnWindowFocus: false,
+  });
+};
+
+export const useUpdatePhoto = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updatePhoto,
+    onSuccess: () => {
+      toast.success("Foto profil berhasil diperbarui!");
+      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+    },
+    onError: () => {
+      toast.error("Gagal update foto");
+    }
+  });
+};
+
+export const useUpdateProfile = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: Partial<CreateUserPayload>) => updateProfile(data),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+    },
+
+    onError: (e) => {
+      console.log("Gagal update profil" + e);
+      toast.error("Gagal update profil");
+    }
   });
 };

@@ -21,6 +21,8 @@ export interface CreateUserPayload {
   nip?: string;      // hanya guru
   nisn?: string;     // hanya siswa
   password: string;
+  notif_aktif?: boolean;
+  photo?: string;
   rfidCode?: string; // wajib untuk guru/siswa
   rfid?: string;  
 }
@@ -28,8 +30,10 @@ export interface CreateUserPayload {
 export interface SiswaProfilInfoProps {
   name: string;
   nisn: string;
+  photo?: string;
   nohp?: string;
   rfid: string;
+  notifikasi?: boolean;
 }
 
 

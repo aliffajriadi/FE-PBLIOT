@@ -4,8 +4,8 @@ import SettingProfilSiswa from "../components/pengaturan/SettingProfilSiswa";
 
 export default function Page() {
   return (
-        <Header>
-          <SettingProfilSiswa />
-        </Header>
-      );
+    <Header>
+      <SettingProfilSiswa />
+    </Header>
+  );
 }

@@ -1,31 +1,35 @@
-'use client'
+"use client";
 
-import { useState, useRef, useEffect } from 'react'
-import { Menu, Users, LogOut } from 'lucide-react'
-import { useLogout } from '@/lib/hooks/useLogout';
-import { useCurrentUser } from '@/lib/hooks/useUser';
+import { useState, useRef, useEffect } from "react";
+import { Menu, LogOut } from "lucide-react";
+import { useLogout } from "@/lib/hooks/useLogout";
+import { useCurrentUser } from "@/lib/hooks/useUser";
+import Image from "next/image";
 
 interface NavbarProps {
-  onMenuClick: () => void,
-  role?: string
+  onMenuClick: () => void;
+  role?: string;
 }
 
 export default function Navbar({ onMenuClick }: NavbarProps) {
-  const [dropdownOpen, setDropdownOpen] = useState(false)
-  const dropdownRef = useRef<HTMLDivElement>(null)
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const { data: user, isLoading } = useCurrentUser();
   const logoutMutation = useLogout();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setDropdownOpen(false)
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setDropdownOpen(false);
       }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-30">
@@ -46,11 +50,22 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
             onClick={() => setDropdownOpen(!dropdownOpen)}
             className="flex items-center gap-3 focus:outline-none"
           >
-            <span className="text-sm font-medium text-gray-700 hidden sm:block capitalize">
+            <span className="text-sm font-medium text-gray-700 capitalize">
               {isLoading ? "Memuat..." : user?.name || "Pengguna"}
             </span>
-            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-              <Users className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-full overflow-hidden object-cover border-1 border-primary hover:border-2 hover:border-primary transition-all duration-150">
+              <Image
+                src={
+                  user?.photo === "default"
+                    ? "/default.jpeg"
+                    : "https://jokilek.diskon.com/storage/files/" +
+                        user?.photo || "/default.jpeg"
+                }
+                alt={user?.name || "Pengguna"}
+                width={40}
+                height={40}
+                className="object-cover"
+              />
             </div>
           </button>
 
@@ -71,5 +86,5 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
         </div>
       </div>
     </header>
-  )
+  );
 }

@@ -3,9 +3,11 @@
 import { useState } from 'react'
 import Sidebar from '@/components/sidebar'
 import Navbar from '@/components/layout'
+import useCheckRequirement from '@/providers/requirement'
 
 export default function SiswaLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  useCheckRequirement()
 
   return (
     <div className="min-h-screen bg-gray-50">

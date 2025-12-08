@@ -51,3 +51,13 @@ export const searchUser = async (page: string, limit: string ,query: string, rol
    console.log("get data");
   return res.data.data;
 };
+
+export const updatePhoto = async (data: FormData) => {
+  const res = await api.patch(`/user/update/photo`, data, { withCredentials: true });
+  return res.data.data;
+};
+
+export const updateProfile = async (data: Partial<CreateUserPayload>) => {
+  const res = await api.patch(`/user/profile/me`, data, { withCredentials: true });
+  return res.data.data;
+};

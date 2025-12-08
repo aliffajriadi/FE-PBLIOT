@@ -28,7 +28,9 @@ export default function SettingProfilSiswa() {
           name={user.name} 
           nisn={user.nisn} 
           nohp={user.nohp || "-"} 
+          photo={user.photo}
           rfid={user.rfid?.rfid}
+          notifikasi={user.notif_aktif}
         />
         <UbahPassword />
       </div>
