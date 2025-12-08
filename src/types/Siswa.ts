@@ -5,6 +5,7 @@ export interface Siswa {
   name: string;
   rfid: { rfid: string };
   nohp: string;
+  photo?: string;
 }
 
 export interface SiswaFormData {

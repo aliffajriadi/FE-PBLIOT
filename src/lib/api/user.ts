@@ -32,7 +32,7 @@ export const getUserById = async (id: number) => {
 };
 
 export const updateUser = async (id: number, data: Partial<CreateUserPayload>) => {
-  const res = await api.put(`/user/${id}`, data, { withCredentials: true });
+  const res = await api.patch(`/user/${id}`, data, { withCredentials: true });
   return res.data.data;
 };
 
@@ -44,4 +44,10 @@ export const deleteUser = async (id: number) => {
 export const getCurrentUser = async () => {
   const res = await api.get("/user/profile/me", { withCredentials: true });
   return res.data.data; 
+};
+
+export const searchUser = async (page: string, limit: string ,query: string, role: "guru" | "siswa") => {
+  const res = await api.get(`/user/search/all?query=${query}&page=${page}&limit=${limit}&role=${role}`, { withCredentials: true });
+   console.log("get data");
+  return res.data.data;
 };

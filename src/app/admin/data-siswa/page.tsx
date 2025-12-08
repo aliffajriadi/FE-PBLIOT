@@ -1,77 +1,99 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import AdminLayout from "../component/layout/Layout";
 import SiswaTable from "../component/siswa/TableSiswa";
 import TableHeaderControls from "../component/siswa/TableHeaderControls";
-import { useUserQuery } from "@/lib/hooks/useUser";
+import { useUserQuery, useSearchUser } from "@/lib/hooks/useUser";
 import SkeletonTable from "@/components/SkeletonTable";
-import { Siswa } from "@/types/Siswa";
 
 export default function SiswaPage() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [limit] = useState(10); // jumlah data per halaman
 
-  // Panggil API
-  const { data, isLoading, isError } = useUserQuery(
+  const limit = 10;
+  const role = "siswa";
+
+  // 🔥 untuk mencegah pagination direset ketika klik pagination
+  const isFromPagination = useRef(false);
+
+  const handlePageChange = (p: number) => {
+    isFromPagination.current = true;
+    setPage(p);
+  };
+
+  // 🕒 Debounce 1 detik untuk searchInput → search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // jika bukan dari pagination → reset ke page 1
+      if (!isFromPagination.current) {
+        setPage(1);
+      }
+
+      setSearch(searchInput);
+
+      // reset flag
+      isFromPagination.current = false;
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  const isSearching = search.trim().length > 0;
+
+  // Normal query
+  const userQuery = useUserQuery(page.toString(), limit.toString(), role);
+
+  // Search query
+  const searchQueryApi = useSearchUser(
     page.toString(),
     limit.toString(),
-    "siswa"
+    search,
+    role
   );
 
-  // Filter data berdasarkan search
-  const filteredStudents =
-    data?.users.filter(
-      (s: Siswa) =>
-        s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (s.nisn && s.nisn.toLowerCase().includes(searchQuery.toLowerCase()))
-    ) || [];
+  // pilih query aktif
+  const active = isSearching ? searchQueryApi : userQuery;
 
-  // Total pages dari backend
-  const totalPages = data?.total ? Math.ceil(data.total / limit) : 1;
+  const totalPages = active.data?.total
+    ? Math.ceil(active.data.total / limit)
+    : 1;
 
-  if (isLoading)
+  // Loading
+  if (active.isLoading) {
     return (
       <AdminLayout>
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <div className="flex justify-between items-center pb-4">
-            <h3 className="text-2xl font-bold text-primary">Data Siswa</h3>
-            <p className="text-gray-500 animate-pulse text-sm">
-              Sedang Memuat Data....
-            </p>
-          </div>
+        <div className="p-6 bg-white rounded-2xl border">
+          <TableHeaderControls
+            title="Data Siswa"
+            addButtonLink="/admin/data-siswa/add"
+            addButtonLabel="Tambah Siswa"
+            onSearch={(v) => setSearchInput(v)}
+          />
           <SkeletonTable rows={10} cols={6} />
         </div>
       </AdminLayout>
     );
-
-  if (isError)
-    return (
-      <AdminLayout>
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center text-red-500">
-          Gagal mengambil data. Pastikan backend menyala.
-        </div>
-      </AdminLayout>
-    );
+  }
 
   return (
     <AdminLayout>
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+      <div className="p-6 bg-white rounded-2xl border">
         <TableHeaderControls
-          onSearch={setSearchQuery}
           title="Data Siswa"
           addButtonLink="/admin/data-siswa/add"
           addButtonLabel="Tambah Siswa"
+          onSearch={(v) => setSearchInput(v)}
         />
 
         <div className="mt-6">
           <SiswaTable
-            data={filteredStudents}
+            data={active.data?.users || []}
             page={page}
             totalPages={totalPages}
-            onPageChange={setPage}
-            totalData={data.total}
+            onPageChange={handlePageChange}
+            totalData={active.data?.total || 0}
             limit={limit}
           />
         </div>

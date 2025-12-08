@@ -3,6 +3,7 @@ export interface Teacher {
   nip?: string;
   nama: string;
   name?: string;
+  photo?: string;
   nohp: string;
   rfid? : {
     rfid: string;

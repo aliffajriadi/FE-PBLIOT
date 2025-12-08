@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createUser, getUsers, updateUser, deleteUser, getUserById,getCurrentUser, getUserParams  } from "@/lib/api/user";
+import { createUser, getUsers, updateUser, searchUser, deleteUser, getUserById,getCurrentUser, getUserParams  } from "@/lib/api/user";
 import { CreateUserPayload } from "@/types/user";
 
 export const useUsers = () => {
@@ -83,7 +83,7 @@ export const useDeleteUser = () => {
   return useMutation({
     mutationFn: (id: number) => deleteUser(id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["users"] });
+      qc.invalidateQueries({ queryKey: ["userParams"] });
     },
   });
 };
@@ -101,5 +101,16 @@ export const useCurrentUser = () => {
    return useQuery({
     queryKey: ["currentUser"],
     queryFn: () => getCurrentUser(), 
+  });
+};
+
+export const useSearchUser = (page: string, limit: string, query: string, role: "guru" | "siswa") => {
+  console.log('Query:', query);
+  return useQuery({
+    queryKey: ["searchUser", page, limit, query, role],
+    queryFn: () => searchUser(page, limit, query, role),
+    enabled: query.length > 0,
+    staleTime: 1000,
+    refetchOnWindowFocus: false,
   });
 };

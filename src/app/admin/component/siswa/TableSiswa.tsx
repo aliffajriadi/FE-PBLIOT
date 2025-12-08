@@ -1,13 +1,14 @@
-'use client';
+"use client";
 
-import { Edit2, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useDeleteUser } from '@/lib/hooks/useUser';
-import { useState } from 'react';
-import ConfirmDeleteModal from '@/components/ConfirmDeleteModal';
-import { Siswa } from '@/types/Siswa';
-import { getErrorMessage } from '@/utils/getErrorMessage';
-import { toast } from 'sonner';
+import { Edit2, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useDeleteUser } from "@/lib/hooks/useUser";
+import { useState } from "react";
+import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
+import { Siswa } from "@/types/Siswa";
+import { getErrorMessage } from "@/utils/getErrorMessage";
+import { toast } from "sonner";
+import Image from "next/image";
 
 interface TableSiswaProps {
   data: Siswa[];
@@ -59,13 +60,46 @@ export default function TableSiswa({
       },
     });
   };
+  function FotoSiswa({ photo, name }: { photo?: string; name?: string }) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const finalName = name ?? "Unknown";
+  const finalPhoto = photo ?? "default";
+
+  const src =
+    finalPhoto === "default"
+      ? "/default.jpeg"
+      : `https://jokilek.diskon.com/storage/files/${finalPhoto}`;
+
+  return (
+    <div className="relative w-[50px] h-[50px]">
+      {isLoading && (
+        <div className="absolute inset-0 rounded-full bg-gray-200 animate-pulse" />
+      )}
+
+      <Image
+        src={src}
+        alt={finalName}
+        width={50}
+        height={50}
+        className={`rounded-full object-cover transition-opacity duration-300 ${
+          isLoading ? "opacity-0" : "opacity-100"
+        }`}
+        onLoadingComplete={() => setIsLoading(false)}
+      />
+    </div>
+  );
+}
+
 
   const handleEdit = (id: number) =>
     router.push(`/admin/data-siswa/${id}/edit`);
 
   if (!data || data.length === 0)
     return (
-      <div className="text-center py-12 text-gray-500">Tidak ada data siswa</div>
+      <div className="text-center py-12 text-gray-500">
+        Tidak ada data siswa
+      </div>
     );
 
   const startIndex = (page - 1) * limit;
@@ -78,7 +112,7 @@ export default function TableSiswa({
           <thead className="bg-gray-50">
             <tr>
               <th className="text-left py-3 px-4 font-semibold text-gray-700">
-                ID Siswa
+                Foto Siswa
               </th>
               <th className="text-left py-3 px-4 font-semibold text-gray-700">
                 NISN
@@ -104,15 +138,17 @@ export default function TableSiswa({
                 className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
               >
                 <td className="py-4 px-4 font-mono text-sm text-gray-600">
-                  {`S00${startIndex + idx + 1}`}
+                  <FotoSiswa photo={siswa.photo} name={siswa.name} />
                 </td>
                 <td className="py-4 px-4 font-mono text-sm text-gray-600">
-                  {siswa.nisn ?? '-'}
+                  {siswa.nisn ?? "-"}
                 </td>
-                <td className="py-4 px-4 font-medium text-gray-800">{siswa.name}</td>
+                <td className="py-4 px-4 font-medium text-gray-800">
+                  {siswa.name}
+                </td>
                 <td className="py-4 px-4 text-gray-600">{siswa.nohp}</td>
                 <td className="py-4 px-4 font-mono text-sm text-gray-600">
-                  {siswa.rfid?.rfid || '-'}
+                  {siswa.rfid?.rfid || "-"}
                 </td>
                 <td className="py-4 px-4">
                   <div className="flex items-center gap-2">
@@ -141,9 +177,11 @@ export default function TableSiswa({
       {/* Pagination */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-4 px-2">
         <p className="text-sm text-gray-500">
-          Menampilkan <span className="font-medium text-gray-900">{startIndex + 1}</span> sampai{' '}
-          <span className="font-medium text-gray-900">{endIndex}</span> dari{' '}
-          <span className="font-medium text-gray-900">{totalData}</span> data
+          Menampilkan{" "}
+          <span className="font-medium text-gray-900">{startIndex + 1}</span>{" "}
+          sampai <span className="font-medium text-gray-900">{endIndex}</span>{" "}
+          dari <span className="font-medium text-gray-900">{totalData}</span>{" "}
+          data
         </p>
 
         <div className="flex items-center gap-2">
@@ -161,7 +199,9 @@ export default function TableSiswa({
                 key={p}
                 onClick={() => onPageChange(p)}
                 className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
-                  page === p ? 'bg-primary text-white' : 'text-gray-600 hover:bg-gray-100'
+                  page === p
+                    ? "bg-primary text-white"
+                    : "text-gray-600 hover:bg-gray-100"
                 }`}
               >
                 {p}
