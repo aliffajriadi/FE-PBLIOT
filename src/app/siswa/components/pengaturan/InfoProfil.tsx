@@ -9,7 +9,6 @@ export default function InfoProfil({ name, nisn, nohp, rfid }: SiswaProfilInfoPr
 
   const handleToggle = () => {
     setWaNotificationEnabled(!waNotificationEnabled);
-    // TODO: panggil API update backend
   };
 
   return (
@@ -26,13 +25,14 @@ export default function InfoProfil({ name, nisn, nohp, rfid }: SiswaProfilInfoPr
         </p>
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex flex-col md:flex-row gap-4">
         <div className="flex-1">
           <label className="block text-sm font-medium text-gray-700 mb-1">NISN:</label>
           <p className="w-full border border-gray-200 rounded-lg p-3 text-sm font-semibold text-gray-800 bg-gray-50">
             {nisn}
           </p>
         </div>
+
         <div className="flex-1">
           <label className="block text-sm font-medium text-gray-700 mb-1">UID RFID:</label>
           <p className="w-full border border-gray-200 rounded-lg p-3 text-sm font-mono font-semibold text-gray-800">
@@ -48,8 +48,8 @@ export default function InfoProfil({ name, nisn, nohp, rfid }: SiswaProfilInfoPr
         </p>
       </div>
 
-      {/* Switch Notifikasi WhatsApp */}
-      <div className="absolute bottom-6 left-6 flex items-center gap-3">
+      {/* SWITCH Notifikasi WhatsApp */}
+      <div className="flex items-center gap-3 mt-4 md:absolute md:bottom-6 md:left-6">
         <button
           onClick={handleToggle}
           role="switch"
@@ -64,6 +64,7 @@ export default function InfoProfil({ name, nisn, nohp, rfid }: SiswaProfilInfoPr
             }`}
           />
         </button>
+
         <label className="text-sm font-medium text-gray-700 select-none cursor-pointer">
           Aktifkan notifikasi WhatsApp
         </label>

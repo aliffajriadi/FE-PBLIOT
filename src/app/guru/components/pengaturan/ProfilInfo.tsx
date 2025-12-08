@@ -10,11 +10,11 @@ export default function ProfilInfo({ name, nip, nohp, uidRfid }: ProfilInfoProps
 
   const handleToggle = () => {
     setWaNotificationEnabled(!waNotificationEnabled);
-    // TODO: panggil API update backend
   };
 
   return (
     <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 relative space-y-6">
+
       <div className="flex items-center gap-3 border-b pb-4 mb-4">
         <User className="w-5 h-5 text-primary-600" />
         <h2 className="text-xl font-semibold text-gray-800">Informasi Akun</h2>
@@ -27,7 +27,7 @@ export default function ProfilInfo({ name, nip, nohp, uidRfid }: ProfilInfoProps
         </p>
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex flex-col md:flex-row gap-4">
         <div className="flex-1">
           <label className="block text-sm font-medium text-gray-700 mb-1">NIP:</label>
           <p className="w-full border border-gray-200 rounded-lg p-3 text-sm font-semibold text-gray-800 bg-gray-50">
@@ -52,8 +52,8 @@ export default function ProfilInfo({ name, nip, nohp, uidRfid }: ProfilInfoProps
         />
       </div>
 
-      {/* Switch Notifikasi WhatsApp */}
-      <div className="absolute bottom-6 left-6 flex items-center gap-3">
+      {/* Toggle Notifikasi ke WhatsApp */}
+      <div className="flex items-center gap-3 mt-4 md:absolute md:bottom-6 md:left-6">
         <button
           onClick={handleToggle}
           role="switch"
@@ -72,6 +72,7 @@ export default function ProfilInfo({ name, nip, nohp, uidRfid }: ProfilInfoProps
           Aktifkan notifikasi WhatsApp
         </label>
       </div>
+
     </div>
   );
 }
