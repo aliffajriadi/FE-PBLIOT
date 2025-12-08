@@ -90,7 +90,7 @@ export default function TeachersTable({
           </thead>
 
           <tbody>
-            {data.map((guru, idx) => (
+            {data.map((guru) => (
               <tr
                 key={guru.id}
                 className="border-b border-gray-100 hover:bg-gray-50 transition-colors"

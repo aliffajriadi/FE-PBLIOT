@@ -132,7 +132,7 @@ export default function TableSiswa({
             </tr>
           </thead>
           <tbody>
-            {data.map((siswa: Siswa, idx: number) => (
+            {data.map((siswa: Siswa) => (
               <tr
                 key={siswa.id}
                 className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
