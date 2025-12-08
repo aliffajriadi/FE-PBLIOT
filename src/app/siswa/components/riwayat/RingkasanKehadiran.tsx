@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle, Clock, XCircle, Ban } from "lucide-react";
+import { CheckCircle, XCircle } from "lucide-react";
 
 interface AbsensiData {
   tanggal: string;
@@ -14,24 +14,33 @@ interface Props {
 export default function RingkasanKehadiran({ data }: Props) {
   const total = data.length;
   const hadir = data.filter((d) => d.status === "Hadir").length;
-  const terlambat = data.filter((d) => d.status === "Terlambat").length;
-  const izin = data.filter((d) => d.status === "Izin").length;
+  const alfa = total - hadir;
 
   const cards = [
-    { title: "Total Hadir", value: hadir, icon: <CheckCircle className="w-7 h-7 text-green-600" />, color: "bg-green-50" },
-    { title: "Terlambat", value: terlambat, icon: <Clock className="w-7 h-7 text-yellow-600" />, color: "bg-yellow-50" },
-    { title: "Izin / Sakit", value: izin, icon: <Ban className="w-7 h-7 text-blue-600" />, color: "bg-blue-50" },
-    { title: "Total Hari", value: total, icon: <XCircle className="w-7 h-7 text-primary-600" />, color: "bg-indigo-50" },
+    {
+      title: "Total Hadir",
+      value: hadir,
+      icon: <CheckCircle className="w-6 h-6 text-green-600/70" />,
+      bg: "bg-green-50/40 border-green-100"
+    },
+    {
+      title: "Tidak Hadir",
+      value: alfa,
+      icon: <XCircle className="w-6 h-6 text-red-600/70" />,
+      bg: "bg-red-50/40 border-red-100"
+    }
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
       {cards.map((card, idx) => (
         <div
           key={idx}
-          className={`p-5 rounded-xl shadow-md ${card.color} hover:shadow-lg transition duration-200 flex items-center gap-4`}
+          className={`p-5 rounded-xl border shadow-sm hover:shadow-md transition duration-150 flex items-center gap-4 ${card.bg}`}
         >
-          <div className="p-3 rounded-full bg-white shadow-sm">{card.icon}</div>
+          <div className="p-3 rounded-full bg-white border shadow-sm">
+            {card.icon}
+          </div>
           <div>
             <p className="text-sm text-gray-600 font-medium">{card.title}</p>
             <p className="text-2xl font-bold text-gray-800">{card.value}</p>

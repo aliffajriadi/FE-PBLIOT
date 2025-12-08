@@ -251,7 +251,7 @@ export default function SiswaForm({ mode, initialData }: SiswaFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 disabled:opacity-50"
+          className="flex-1 bg-primary text-white px-6 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 disabled:opacity-50"
         >
           <Save className="w-5 h-5" />
           <span>{isSubmitting ? "Menyimpan..." : "Simpan Data Siswa"}</span>
