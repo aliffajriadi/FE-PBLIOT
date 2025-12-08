@@ -6,7 +6,8 @@ import { useLogout } from '@/lib/hooks/useLogout';
 import { useCurrentUser } from '@/lib/hooks/useUser';
 
 interface NavbarProps {
-  onMenuClick: () => void
+  onMenuClick: () => void,
+  role?: string
 }
 
 export default function Navbar({ onMenuClick }: NavbarProps) {
