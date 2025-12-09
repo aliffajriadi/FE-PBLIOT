@@ -1,6 +1,6 @@
 import {api} from '../axios';
 import {LoginPayload} from "@/types/login";
-import { CreateUserPayload} from "@/types/user";
+import { CreateUserPayload, UserUpdatePassword} from "@/types/user";
 
 
 export const LoginRequest = (data: LoginPayload) =>
@@ -59,5 +59,10 @@ export const updatePhoto = async (data: FormData) => {
 
 export const updateProfile = async (data: Partial<CreateUserPayload>) => {
   const res = await api.patch(`/user/profile/me`, data, { withCredentials: true });
+  return res.data.data;
+};
+
+export const updatePasswordProfile = async (data: UserUpdatePassword) => {
+  const res = await api.patch(`/user/profile/password`, data, { withCredentials: true });
   return res.data.data;
 };

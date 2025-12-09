@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createUser, getUsers, updateUser, updatePhoto, searchUser, updateProfile, deleteUser, getUserById,getCurrentUser, getUserParams  } from "@/lib/api/user";
-import { CreateUserPayload } from "@/types/user";
+import { createUser, getUsers, updateUser, updatePhoto, updatePasswordProfile, searchUser, updateProfile, deleteUser, getUserById,getCurrentUser, getUserParams  } from "@/lib/api/user";
+import { CreateUserPayload, UserUpdatePassword } from "@/types/user";
 import { toast } from "sonner";
 
 export const useUsers = () => {
@@ -146,5 +146,20 @@ export const useUpdateProfile = () => {
       console.log("Gagal update profil" + e);
       toast.error("Gagal update profil");
     }
+  });
+};
+
+export const useUpdatePasswordProfile = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: UserUpdatePassword) => updatePasswordProfile(data), // panggil API
+    onSuccess: () => {
+      toast.success("Password berhasil diperbarui");
+    },
+    onError: (e: any) => {
+      console.log("Gagal update password:" + e);
+      toast.error("Gagal update password");
+    },
   });
 };

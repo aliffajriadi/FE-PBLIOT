@@ -43,3 +43,8 @@ export interface ProfilInfoProps {
   nohp?: string;
   uidRfid: string;
 }
+
+export interface UserUpdatePassword {
+  password: string;
+  confirm_password: string;
+}
