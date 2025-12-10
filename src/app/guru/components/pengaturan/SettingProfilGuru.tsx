@@ -22,12 +22,13 @@ export default function SettingProfilGuru() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <ProfilInfo
-          name={data?.name ?? "-"}
-          nip={data?.nip ?? "-"}
-          nohp={data?.nohp ?? "-"}
-          uidRfid={data?.rfid?.rfid ?? "-"}
-        />
-
+        name={data?.name ?? "-"}
+        nip={data?.nip ?? "-"}
+        photo={data?.photo ?? undefined}    
+        nohp={data?.nohp ?? "-"}
+        uidRfid={data?.rfid?.rfid ?? "-"}
+        notifikasi={data?.notif_aktif ?? false}
+      />
         <UbahPassword />
       </div>
     </motion.div>

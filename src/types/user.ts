@@ -40,8 +40,10 @@ export interface SiswaProfilInfoProps {
 export interface ProfilInfoProps {
   name: string;
   nip: string;
+  photo?: string;
   nohp?: string;
   uidRfid: string;
+  notifikasi?: boolean;
 }
 
 export interface UserUpdatePassword {

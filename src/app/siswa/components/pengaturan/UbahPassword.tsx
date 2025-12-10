@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Lock, Save, User } from "lucide-react";
+import { Lock, Save } from "lucide-react";
 import { useUpdatePasswordProfile } from "@/lib/hooks/useUser";
 import { UserUpdatePassword } from "@/types/user";
 

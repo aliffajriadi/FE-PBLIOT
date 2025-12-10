@@ -150,15 +150,14 @@ export const useUpdateProfile = () => {
 };
 
 export const useUpdatePasswordProfile = () => {
-  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (data: UserUpdatePassword) => updatePasswordProfile(data), // panggil API
     onSuccess: () => {
       toast.success("Password berhasil diperbarui");
     },
-    onError: (e: any) => {
-      console.log("Gagal update password:" + e);
+    onError: (e: unknown) => {
+      console.log("Gagal update password:", e);
       toast.error("Gagal update password");
     },
   });
