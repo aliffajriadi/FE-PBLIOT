@@ -24,7 +24,7 @@ export default function RingkasanKehadiran({ data }: Props) {
       bg: "bg-green-50/40 border-green-100"
     },
     {
-      title: "Tidak Hadir",
+      title: "Total Terlambat",
       value: alfa,
       icon: <XCircle className="w-6 h-6 text-red-600/70" />,
       bg: "bg-red-50/40 border-red-100"

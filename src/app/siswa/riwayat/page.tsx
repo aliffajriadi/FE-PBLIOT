@@ -11,9 +11,9 @@ import Header from "../components/layout/layout";
 const absensiData = [
   { tanggal: "06/10/2025", nama: "Muhammad Yuki", kelas: "XII A", jamMasuk: "07:58", status: "Hadir" },
   { tanggal: "05/10/2025", nama: "Muhammad Yuki", kelas: "XII A", jamMasuk: "08:10", status: "Terlambat" },
-  { tanggal: "04/09/2025", nama: "Muhammad Yuki", kelas: "XII A", jamMasuk: "-", status: "Izin" },
+  { tanggal: "04/09/2025", nama: "Muhammad Yuki", kelas: "XII A", jamMasuk: "08:10", status: "Terlambat" },
   { tanggal: "03/09/2025", nama: "Muhammad Yuki", kelas: "XII A", jamMasuk: "07:59", status: "Hadir" },
-  { tanggal: "02/08/2025", nama: "Muhammad Yuki", kelas: "XII A", jamMasuk: "-", status: "Sakit" },
+  { tanggal: "02/08/2025", nama: "Muhammad Yuki", kelas: "XII A", jamMasuk: "08:10", status: "Terlambat" },
 ];
 
 export default function Page() {

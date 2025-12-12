@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { LoadingProvider } from "@/components/LoadingContext";
 import Providers from "@/providers/query-provider";
+import NextTopLoader from "nextjs-toploader";
 
 // FONTS GLOBAL
 const poppins = Poppins({
@@ -27,6 +28,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.className} antialiased`}>
+        <NextTopLoader
+            color="oklch(39.356% 0.10171 263.904)"
+            initialPosition={0.08}
+            crawlSpeed={200}
+            height={3}
+            crawl={true}
+            showSpinner={false}
+            easing="ease"
+            speed={200}
+          />
         <Providers>
           <LoadingProvider>
             <main>{children}</main>
@@ -40,7 +51,7 @@ export default function RootLayout({
                   fontWeight: "500",
                 },
               }}
-              />
+            />
           </LoadingProvider>
         </Providers>
       </body>

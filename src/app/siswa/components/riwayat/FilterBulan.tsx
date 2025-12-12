@@ -11,8 +11,12 @@ export default function FilterBulan({ onFilter }: Props) {
   const [bulan, setBulan] = useState("");
 
   const bulanList = [
-    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-    "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+    "Hari ini",
+    "Minggu Ini",
+    "1 Bulan Lalu",
+    "3 Bulan Lalu",
+    "6 Bulan Lalu",
+    "1 Tahun Lalu",
   ];
 
   const handleClick = () => {
@@ -32,7 +36,7 @@ export default function FilterBulan({ onFilter }: Props) {
             value={bulan}
             onChange={(e) => setBulan(e.target.value)}
           >
-            <option value="">Semua Bulan</option>
+            <option value="">Seminggu Ini</option>
             {bulanList.map((b, i) => (
               <option key={i} value={b}>
                 {b}
