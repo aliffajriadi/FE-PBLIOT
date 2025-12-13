@@ -66,3 +66,8 @@ export const updatePasswordProfile = async (data: UserUpdatePassword) => {
   const res = await api.patch(`/user/profile/password`, data, { withCredentials: true });
   return res.data.data;
 };
+
+export const statistikSiswaAbsensiProfile = async () => {
+  const res = await api.get(`/absensi/statistik/profile-siswa`, { withCredentials: true });
+  return res.data.data;
+}

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createUser, getUsers, updateUser, updatePhoto, updatePasswordProfile, searchUser, updateProfile, deleteUser, getUserById,getCurrentUser, getUserParams  } from "@/lib/api/user";
+import { createUser, getUsers, updateUser, updatePhoto, updatePasswordProfile, searchUser, updateProfile, deleteUser, getUserById,getCurrentUser, getUserParams, statistikSiswaAbsensiProfile  } from "@/lib/api/user";
 import { CreateUserPayload, UserUpdatePassword } from "@/types/user";
 import { toast } from "sonner";
 
@@ -157,8 +157,16 @@ export const useUpdatePasswordProfile = () => {
       toast.success("Password berhasil diperbarui");
     },
     onError: (e: unknown) => {
-      console.log("Gagal update password:", e);
       toast.error("Gagal update password");
     },
   });
 };
+
+
+export const useStatistikAbsensiSiswa = () => {
+  return useQuery({
+    queryKey: ["statistikSiswaAbsensiProfile"],
+    queryFn: statistikSiswaAbsensiProfile,
+    staleTime: 1000 * 60,
+  });
+}
