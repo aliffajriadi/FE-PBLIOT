@@ -156,7 +156,7 @@ export const useUpdatePasswordProfile = () => {
     onSuccess: () => {
       toast.success("Password berhasil diperbarui");
     },
-    onError: (e: unknown) => {
+    onError: () => {
       toast.error("Gagal update password");
     },
   });
