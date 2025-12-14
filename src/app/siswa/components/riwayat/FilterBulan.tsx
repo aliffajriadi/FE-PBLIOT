@@ -4,20 +4,20 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 
 interface Props {
-  onFilter: (bulan: string) => void;
+  onFilter: (bulan: number) => void;
 }
 
 export default function FilterBulan({ onFilter }: Props) {
-  const [bulan, setBulan] = useState("");
+  const [bulan, setBulan] = useState<number>(1); // default "Hari ini"
 
-  const bulanList = [
-    "Hari ini",
-    "Minggu Ini",
-    "1 Bulan Lalu",
-    "3 Bulan Lalu",
-    "6 Bulan Lalu",
-    "1 Tahun Lalu",
-  ];
+  const bulanList: { [key: number]: string } = {
+    6: "Hari ini",
+    1: "Minggu Ini",
+    2: "1 Bulan Lalu",
+    3: "3 Bulan Lalu",
+    4: "6 Bulan Lalu",
+    5: "1 Tahun Lalu",
+  };
 
   const handleClick = () => {
     onFilter(bulan);
@@ -28,18 +28,17 @@ export default function FilterBulan({ onFilter }: Props) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
         <div>
           <label htmlFor="bulan" className="block text-sm font-medium text-gray-700 mb-1">
-            Pilih Bulan:
+            Pilih Periode:
           </label>
           <select
             id="bulan"
             className="w-full border border-gray-300 rounded-lg p-2.5 text-sm text-gray-800 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
             value={bulan}
-            onChange={(e) => setBulan(e.target.value)}
+            onChange={(e) => setBulan(parseInt(e.target.value))}
           >
-            <option value="">Seminggu Ini</option>
-            {bulanList.map((b, i) => (
-              <option key={i} value={b}>
-                {b}
+            {Object.entries(bulanList).map(([key, label]) => (
+              <option key={key} value={key}>
+                {label}
               </option>
             ))}
           </select>

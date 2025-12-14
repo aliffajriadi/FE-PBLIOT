@@ -30,3 +30,9 @@ export const deleteClass = async (id: number) => {
   const res = await api.delete(`/kelas/${id}`);
   return res.data;
 };
+
+
+export const getDetailClassAbsensi = async (id: number) => {
+  const res = await api.get(`/absensi/detail-absensi/kelas/${id}`, { withCredentials: true });
+  return res.data.data;
+}

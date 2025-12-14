@@ -78,7 +78,20 @@ const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, onClose }) => {
 
           <nav className="space-y-2">
             {menuItems.map((item) => {
-              const isActive = pathname === item.href
+              // Cek apakah ini adalah link dashboard utama (misal: /admin, /guru, atau /siswa)
+              // Kita asumsikan dashboard link-nya sama persis dengan `/${role}`
+              const isMainDashboard = item.href === `/${role}`
+
+              let isActive = false
+
+              if (isMainDashboard) {
+                // KHUSUS DASHBOARD: Harus sama persis
+                isActive = pathname === item.href
+              } else {
+                // MENU LAIN: Boleh sama persis ATAU punya anak path (sub-halaman)
+                isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
+              }
+
               return (
                 <Link
                   key={item.label}

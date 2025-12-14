@@ -1,72 +1,40 @@
-"use client";
-
-import { useState } from "react";
+'use client';
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import RingkasanKehadiran from "../components/riwayat/RingkasanKehadiran";
 import FilterBulan from "../components/riwayat/FilterBulan";
 import TableAbsensiSiswa from "../components/riwayat/TableAbsensiSiswa";
 import Header from "../components/layout/layout";
 import { useStatistikAbsensiSiswa } from "@/lib/hooks/useUser";
-
-// --- DATA DUMMY ---
-const absensiData = [
-  {
-    tanggal: "06/10/2025",
-    nama: "Muhammad Yuki",
-    kelas: "XII A",
-    jamMasuk: "07:58",
-    status: "Hadir",
-  },
-  {
-    tanggal: "05/10/2025",
-    nama: "Muhammad Yuki",
-    kelas: "XII A",
-    jamMasuk: "08:10",
-    status: "Terlambat",
-  },
-  {
-    tanggal: "04/09/2025",
-    nama: "Muhammad Yuki",
-    kelas: "XII A",
-    jamMasuk: "08:10",
-    status: "Terlambat",
-  },
-  {
-    tanggal: "03/09/2025",
-    nama: "Muhammad Yuki",
-    kelas: "XII A",
-    jamMasuk: "07:59",
-    status: "Hadir",
-  },
-  {
-    tanggal: "02/08/2025",
-    nama: "Muhammad Yuki",
-    kelas: "XII A",
-    jamMasuk: "08:10",
-    status: "Terlambat",
-  },
-];
+import { useLaporanAbsensiSiswa } from "@/lib/hooks/useLaporan";
 
 export default function Page() {
-  const { data: statistik} = useStatistikAbsensiSiswa();
-  const [filteredData, setFilteredData] = useState(absensiData);
+  const [periode, setPeriode] = useState(1); // default bulan / filter
+  const [page, setPage] = useState(1);
+  const [limit] = useState(20);
+  
+ 
 
-  const handleFilter = (bulan: string) => {
-    if (!bulan) {
-      setFilteredData(absensiData);
-      return;
-    }
+  // Ambil data ringkasan statistik
+  const { data: statistik } = useStatistikAbsensiSiswa();
 
-    // ambil angka bulan dari string bulan
-    const monthNumber = new Date(`${bulan} 1, 2025`).getMonth() + 1;
-    const formattedMonth = monthNumber.toString().padStart(2, "0");
+  // Ambil data laporan absensi
+  const { data: laporan, refetch, isLoading } = useLaporanAbsensiSiswa(page, limit, periode);
 
-    // filter data berdasarkan bulan
-    const newData = absensiData.filter(
-      (d) => d.tanggal.split("/")[1] === formattedMonth
-    );
-    setFilteredData(newData);
+  // refetch data jika periode, page, atau limit berubah
+  useEffect(() => {
+    refetch();
+  }, [periode, page, limit, refetch]);
+
+  // Handler filter bulan
+  const handleFilter = (value: number) => {
+    setPeriode(value);
+    setPage(1); // reset page saat filter berubah
   };
+
+  // Hitung totalPages dari total data yang dikembalikan backend
+  const totalPages = laporan?.totalPages || 1;
+  const totalData = laporan?.total ? laporan.total.tepatWaktu + laporan.total.terlambat : 0;
 
   return (
     <Header>
@@ -80,11 +48,23 @@ export default function Page() {
           Riwayat Kehadiran
         </h1>
 
+        {/* Ringkasan Kehadiran */}
         <RingkasanKehadiran data={statistik} />
 
+        {/* Filter Bulan */}
         <FilterBulan onFilter={handleFilter} />
 
-        <TableAbsensiSiswa data={filteredData} />
+        {/* Tabel Absensi dengan pagination */}
+        <TableAbsensiSiswa
+          data={laporan || { absensi: [] }}
+          page={page}
+          totalPages={totalPages}
+          limit={limit}
+          totalData={totalData}
+          isLoading={isLoading}
+          onPageChange={(newPage) => setPage(newPage)}
+          periode={periode}
+        />
       </motion.div>
     </Header>
   );

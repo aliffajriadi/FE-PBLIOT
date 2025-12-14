@@ -8,3 +8,11 @@ export const useStatistik = () => {
         staleTime: 1000 * 60,
     });
 };
+
+export const useLaporanAbsensiSiswa = (page: number, limit: number, periode: number) => {
+    return useQuery({
+        queryKey: ["absensi-siswa", page, limit, periode],
+        queryFn: () => laporan.getAbsensiSiswa(page, limit, periode),
+        staleTime: 1000 * 60,
+    });
+}

@@ -27,3 +27,26 @@ export interface FormErrors {
   nohp?: string;
   rfidCode?: string;
 }
+
+export interface Guru {
+  name: string;
+  nip?: string;
+  nohp?: string;
+  photo?: string;
+}
+
+export interface Kelas {
+  nama: string;
+  masuk: string;
+  keluar: string;
+  expiredAt: string;
+  guru: Guru;
+}
+
+export interface Absensi {
+  id: number;
+  status: boolean;
+  masuk: string;
+  keluar: string;
+  kelas: Kelas;
+}
