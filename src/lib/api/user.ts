@@ -76,3 +76,7 @@ export const logsActivity = async (page: number, limit: number) => {
   const res = await api.get(`/user/profile/activity?page=${page}&limit=${limit}`, { withCredentials: true });
   return res.data.data;
 }
+export const logsActivityDetail = async (id: number) => {
+  const res = await api.get(`/user/profile/activity-detail?id=${id}`, { withCredentials: true });
+  return res.data.data;
+}

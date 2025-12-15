@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createUser, logsActivity, getUsers, updateUser, updatePhoto, updatePasswordProfile, searchUser, updateProfile, deleteUser, getUserById,getCurrentUser, getUserParams, statistikSiswaAbsensiProfile  } from "@/lib/api/user";
+import { createUser, logsActivity, logsActivityDetail, getUsers, updateUser, updatePhoto, updatePasswordProfile, searchUser, updateProfile, deleteUser, getUserById,getCurrentUser, getUserParams, statistikSiswaAbsensiProfile  } from "@/lib/api/user";
 import { CreateUserPayload, UserUpdatePassword } from "@/types/user";
 import { toast } from "sonner";
 
@@ -178,6 +178,13 @@ export const useLogsActivity = (page: number, limit: number) => {
   return useQuery({
     queryKey: ["logs-activity", page, limit],
     queryFn: () => logsActivity(page, limit),
+    staleTime: 1000 * 100,
+  });
+}
+export const useLogsActivityDetail = (id: number) => {
+  return useQuery({
+    queryKey: ["logs-activity-detail", id],
+    queryFn: () => logsActivityDetail(id),
     staleTime: 1000 * 100,
   });
 }

@@ -45,7 +45,7 @@ export default function Page() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <h1 className="text-3xl font-bold flex items-center gap-2 tracking-tight text-gray-800">
+        <h1 className="lg:text-3xl text-2xl font-bold flex items-center gap-2 text-gray-800">
           <Calendar className="w-7 h-7"/> Riwayat Kehadiran
         </h1>
 

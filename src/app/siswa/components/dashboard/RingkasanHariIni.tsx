@@ -126,8 +126,8 @@ export default function RingkasanHariIni() {
   if (!data || data.length === 0) {
     return (
       <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
-        <div className="flex items-center gap-2 mb-4">
-          <Calendar className="text-primary w-5 h-5" />
+        <div className="flex flex-col items-center gap-2 mb-4">
+          <Calendar className="w-5 h-5" />
           <h2 className="text-lg font-semibold text-gray-800">
             Ringkasan Kehadiran Hari Ini
           </h2>
@@ -138,7 +138,9 @@ export default function RingkasanHariIni() {
           <div className="bg-gray-100 p-4 rounded-full mb-4">
             <Calendar className="w-8 h-8 text-gray-400" />
           </div>
-          <p className="text-gray-600 font-medium mb-1">Belum Ada Data Hari Ini</p>
+          <p className="text-gray-600 font-medium mb-1">
+            Belum Ada Data Hari Ini
+          </p>
           <p className="text-sm text-gray-500">
             Kehadiran belum tercatat untuk hari ini
           </p>
@@ -150,15 +152,16 @@ export default function RingkasanHariIni() {
   // Success State with Data
   return (
     <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col lg:flex-row items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Calendar className="text-primary w-5 h-5" />
+          <Calendar className="w-5 h-5" />
           <h2 className="text-lg font-semibold text-gray-800">
             Ringkasan Kehadiran Hari Ini
           </h2>
         </div>
-        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-          {data.length} kelas
+        <span className="flex px-2 gap-2 text-xs text-gray-500 bg-gray-100 py-1 rounded-full">
+          <span>{data.length}</span>
+          <span>Kelas</span>
         </span>
       </div>
       <p className="text-sm text-gray-500 mb-4">{getCurrentDate()}</p>
@@ -175,7 +178,13 @@ export default function RingkasanHariIni() {
                 {getStatusIcon(item.status)}
               </div>
               <div>
-                <p className="font-semibold text-gray-800">
+                <div className="flex items-center lg:hidden">
+                  <p className="font-semibold text-gray-800">
+                    {item.kelas?.nama || "Kelas Tidak Diketahui"}
+                  </p>
+                  {getStatusBadge(item.status)}
+                </div>
+                <p className="font-semibold hidden lg:block text-gray-800">
                   {item.kelas?.nama || "Kelas Tidak Diketahui"}
                 </p>
                 <div className="flex items-center gap-2 mt-1">
@@ -187,7 +196,7 @@ export default function RingkasanHariIni() {
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="lg:flex hidden items-center gap-3">
               {getStatusBadge(item.status)}
             </div>
           </Link>

@@ -20,7 +20,9 @@ export default function SiswaPage() {
         transition={{ duration: 0.4 }}
       >
         <div className="space-y-5">
-          <h1 className="text-3xl font-bold flex items-center gap-2 text-gray-800"><House className="w-7 h-7"/> Dashboard Siswa</h1>
+          <h1 className="lg:text-3xl text-2xl font-bold flex items-center gap-2 text-gray-800">
+            <House className="w-7 h-7" /> Dashboard Siswa
+          </h1>
 
           {/* Ringkasan Kehadiran Hari Ini */}
           <RingkasanHariIni />
@@ -31,14 +33,14 @@ export default function SiswaPage() {
           {/* Jadwal Hari Ini */}
           <LogsAktifitas />
 
-          <div className="flex gap-4 mb-7">
-            <Link href="/siswa/riwayat" className="flex-1">
+          <div className="flex flex-col gap-4 mb-7 sm:flex-row">
+            <Link href="/siswa/riwayat" className="w-full">
               <Button className="w-full py-8 flex items-center justify-center gap-2">
                 <Calendar /> Riwayat Kehadiran
               </Button>
             </Link>
 
-            <Link href="/siswa/pengaturan" className="flex-1">
+            <Link href="/siswa/pengaturan" className="w-full">
               <Button className="w-full py-8 flex items-center justify-center gap-2">
                 <User /> Pengaturan Profile
               </Button>

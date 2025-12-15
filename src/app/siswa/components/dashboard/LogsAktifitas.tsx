@@ -14,6 +14,7 @@ import {
   Apple
 } from "lucide-react";
 import { useState } from "react";
+import Link from "next/link";
 
 interface LogActivity {
   id: number;
@@ -151,6 +152,7 @@ export default function LogsAktifitas() {
               key={log.id}
               className="group p-3 rounded-lg border border-gray-100 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200 cursor-pointer"
             >
+              <Link href={`/siswa/pengaturan/log/${log.id}`}>
               <div className="flex items-start gap-3">
                 <div className="mt-1">
                   {getActivityIcon(log.aktivitas)}
@@ -191,6 +193,7 @@ export default function LogsAktifitas() {
                   </div>
                 </div>
               </div>
+              </Link>
             </div>
           ))
         )}
