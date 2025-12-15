@@ -71,3 +71,8 @@ export const statistikSiswaAbsensiProfile = async () => {
   const res = await api.get(`/absensi/statistik/profile-siswa`, { withCredentials: true });
   return res.data.data;
 }
+
+export const logsActivity = async (page: number, limit: number) => {
+  const res = await api.get(`/user/profile/activity?page=${page}&limit=${limit}`, { withCredentials: true });
+  return res.data.data;
+}

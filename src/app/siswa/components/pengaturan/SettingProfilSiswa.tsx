@@ -19,7 +19,7 @@ export default function SettingProfilSiswa() {
       transition={{ duration: 0.4 }}
     >
       <h1 className="text-3xl font-bold tracking-tight text-gray-800 flex items-center gap-2">
-        <Settings className="w-7 h-7 text-primary-600" />
+        <Settings className="w-7 h-7" />
         Pengaturan Profil
       </h1>
 

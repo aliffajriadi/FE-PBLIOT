@@ -18,7 +18,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { Absensi } from "@/types/Guru";
-
+import { motion } from "framer-motion";
 interface ViewProps {
   id: number;
 }
@@ -99,157 +99,180 @@ function DetailContent({ data }: { data: Absensi }) {
   };
 
   return (
-    <div className="space-y-6 mt-6 px-4 lg:px-0">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-primary to-primary/80 rounded-xl p-6 text-white shadow-lg">
-        <div className="flex items-center gap-3 mb-2">
-          <CalendarDays className="w-8 h-8" />
-          <h1 className="text-2xl font-bold">Detail Riwayat Absensi</h1>
+    <motion.div
+      className="space-y-10"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      <div className="space-y-6 mt-6">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-primary to-primary/80 rounded-xl p-6 text-white shadow-lg">
+          <div className="flex items-center gap-3 mb-2">
+            <CalendarDays className="w-8 h-8" />
+            <h1 className="text-2xl font-bold">Detail Riwayat Absensi</h1>
+          </div>
+          <p className="text-white/90">ID Absensi: #{data.id}</p>
         </div>
-        <p className="text-white/90">ID Absensi: #{data.id}</p>
-      </div>
 
-      {/* Status Kehadiran & Informasi Kelas */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Status Kehadiran */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-primary" />
-              Status Kehadiran
+        {/* Status Kehadiran & Informasi Kelas */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Status Kehadiran */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-primary" />
+                Status Kehadiran
+              </h2>
+              <span
+                className={`px-4 py-1.5 rounded-full text-sm font-medium ${
+                  data.status
+                    ? "bg-green-100 text-green-700"
+                    : "bg-red-100 text-red-700"
+                }`}
+              >
+                {data.status ? "Tepat Waktu" : "Terlambat"}
+              </span>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                <LogIn className="w-5 h-5 text-green-600 mt-0.5" />
+                <div className="flex-1">
+                  <p className="text-sm text-gray-600 mb-1">Waktu Masuk</p>
+                  <p className="font-semibold text-gray-800">
+                    {formatTime(data.masuk)}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {formatDate(data.masuk)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                <LogOut className="w-5 h-5 text-red-600 mt-0.5" />
+                <div className="flex-1">
+                  <p className="text-sm text-gray-600 mb-1">Waktu Keluar</p>
+                  <p className="font-semibold text-gray-800">
+                    {formatTime(data.keluar)}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {formatDate(data.keluar)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-3 bg-primary/5 rounded-lg border border-primary/20">
+                <Clock className="w-5 h-5 text-primary mt-0.5" />
+                <div className="flex-1">
+                  <p className="text-sm text-gray-600 mb-1">Durasi Kehadiran</p>
+                  <p className="font-semibold text-gray-800">
+                    {calculateDuration(data.masuk, data.keluar)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Informasi Kelas */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4">
+              <School className="w-5 h-5 text-primary" />
+              Informasi Kelas
             </h2>
-            <span
-              className={`px-4 py-1.5 rounded-full text-sm font-medium ${
-                data.status
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
-              }`}
-            >
-              {data.status ? "Tepat Waktu" : "Terlambat"}
-            </span>
-          </div>
 
-          <div className="space-y-4">
-            <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-              <LogIn className="w-5 h-5 text-green-600 mt-0.5" />
-              <div className="flex-1">
-                <p className="text-sm text-gray-600 mb-1">Waktu Masuk</p>
-                <p className="font-semibold text-gray-800">
-                  {formatTime(data.masuk)}
-                </p>
-                <p className="text-xs text-gray-500 mt-1">
-                  {formatDate(data.masuk)}
+            <div className="space-y-4">
+              <div className="p-4 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg border border-primary/20">
+                <p className="text-sm text-gray-600 mb-1">Nama Kelas</p>
+                <p className="text-2xl font-bold text-gray-800">
+                  {data.kelas.nama}
                 </p>
               </div>
-            </div>
 
-            <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-              <LogOut className="w-5 h-5 text-red-600 mt-0.5" />
-              <div className="flex-1">
-                <p className="text-sm text-gray-600 mb-1">Waktu Keluar</p>
-                <p className="font-semibold text-gray-800">
-                  {formatTime(data.keluar)}
-                </p>
-                <p className="text-xs text-gray-500 mt-1">
-                  {formatDate(data.keluar)}
-                </p>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3 bg-gray-50 rounded-lg">
+                  <p className="text-xs text-gray-600 mb-1">Jam Masuk Kelas</p>
+                  <p className="font-medium text-gray-800">
+                    {formatTime(data.kelas.masuk)}
+                  </p>
+                </div>
+                <div className="p-3 bg-gray-50 rounded-lg">
+                  <p className="text-xs text-gray-600 mb-1">Jam Keluar Kelas</p>
+                  <p className="font-medium text-gray-800">
+                    {formatTime(data.kelas.keluar)}
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <div className="flex items-start gap-3 p-3 bg-primary/5 rounded-lg border border-primary/20">
-              <Clock className="w-5 h-5 text-primary mt-0.5" />
-              <div className="flex-1">
-                <p className="text-sm text-gray-600 mb-1">Durasi Kehadiran</p>
-                <p className="font-semibold text-gray-800">
-                  {calculateDuration(data.masuk, data.keluar)}
+              <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                <p className="text-xs text-gray-600 mb-1">Batas Waktu Absen</p>
+                <p className="font-medium text-gray-800">
+                  {formatTime(data.kelas.expiredAt)}
                 </p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Informasi Kelas */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4">
-            <School className="w-5 h-5 text-primary" />
-            Informasi Kelas
+        {/* Informasi Guru Pengajar */}
+        <div className="bg-white rounded-xl mb-15 p-6 shadow-sm border border-gray-200 w-full">
+          <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-6">
+            <User className="w-5 h-5 text-primary shrink-0" />
+            Guru Pengajar
           </h2>
 
-          <div className="space-y-4">
-            <div className="p-4 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg border border-primary/20">
-              <p className="text-sm text-gray-600 mb-1">Nama Kelas</p>
-              <p className="text-2xl font-bold text-gray-800">{data.kelas.nama}</p>
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+            <div className="shrink-0">
+              <FotoGuru
+                photo={data.kelas.guru.photo}
+                name={data.kelas.guru.name}
+              />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 bg-gray-50 rounded-lg">
-                <p className="text-xs text-gray-600 mb-1">Jam Masuk Kelas</p>
-                <p className="font-medium text-gray-800">{formatTime(data.kelas.masuk)}</p>
-              </div>
-              <div className="p-3 bg-gray-50 rounded-lg">
-                <p className="text-xs text-gray-600 mb-1">Jam Keluar Kelas</p>
-                <p className="font-medium text-gray-800">{formatTime(data.kelas.keluar)}</p>
-              </div>
-            </div>
-
-            <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-              <p className="text-xs text-gray-600 mb-1">Batas Waktu Absen</p>
-              <p className="font-medium text-gray-800">{formatTime(data.kelas.expiredAt)}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Informasi Guru Pengajar */}
-      <div className="bg-white rounded-xl mb-15 p-6 shadow-sm border border-gray-200 w-full">
-        <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-6">
-          <User className="w-5 h-5 text-primary shrink-0" />
-          Guru Pengajar
-        </h2>
-
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-          <div className="shrink-0">
-            <FotoGuru
-              photo={data.kelas.guru.photo}
-              name={data.kelas.guru.name}
-            />
-          </div>
-
-          <div className="flex-1 space-y-4 w-full">
-            <div className="text-center sm:text-left">
-              <p className="text-sm text-gray-500 mb-1">Nama Lengkap</p>
-              <p className="text-lg font-bold text-gray-800 break-words">{data.kelas.guru.name}</p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100 hover:bg-gray-100 transition-colors">
-                <div className="bg-white p-2 rounded-full shadow-sm shrink-0">
-                  <IdCard className="w-4 h-4 text-primary" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs text-gray-500 mb-0.5">NIP</p>
-                  <p className="font-medium text-gray-800 text-sm truncate" title={data.kelas.guru.nip}>
-                    {data.kelas.guru.nip || "-"}
-                  </p>
-                </div>
+            <div className="flex-1 space-y-4 w-full">
+              <div className="text-center sm:text-left">
+                <p className="text-sm text-gray-500 mb-1">Nama Lengkap</p>
+                <p className="text-lg font-bold text-gray-800 break-words">
+                  {data.kelas.guru.name}
+                </p>
               </div>
 
-              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100 hover:bg-gray-100 transition-colors">
-                <div className="bg-white p-2 rounded-full shadow-sm shrink-0">
-                  <Phone className="w-4 h-4 text-primary" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100 hover:bg-gray-100 transition-colors">
+                  <div className="bg-white p-2 rounded-full shadow-sm shrink-0">
+                    <IdCard className="w-4 h-4 text-primary" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs text-gray-500 mb-0.5">NIP</p>
+                    <p
+                      className="font-medium text-gray-800 text-sm truncate"
+                      title={data.kelas.guru.nip}
+                    >
+                      {data.kelas.guru.nip || "-"}
+                    </p>
+                  </div>
                 </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs text-gray-500 mb-0.5">No. Telepon</p>
-                  <p className="font-medium text-gray-800 text-sm truncate" title={data.kelas.guru.nohp}>
-                    {data.kelas.guru.nohp || "-"}
-                  </p>
+
+                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100 hover:bg-gray-100 transition-colors">
+                  <div className="bg-white p-2 rounded-full shadow-sm shrink-0">
+                    <Phone className="w-4 h-4 text-primary" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs text-gray-500 mb-0.5">No. Telepon</p>
+                    <p
+                      className="font-medium text-gray-800 text-sm truncate"
+                      title={data.kelas.guru.nohp}
+                    >
+                      {data.kelas.guru.nohp || "-"}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

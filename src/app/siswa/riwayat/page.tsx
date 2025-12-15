@@ -7,6 +7,7 @@ import TableAbsensiSiswa from "../components/riwayat/TableAbsensiSiswa";
 import Header from "../components/layout/layout";
 import { useStatistikAbsensiSiswa } from "@/lib/hooks/useUser";
 import { useLaporanAbsensiSiswa } from "@/lib/hooks/useLaporan";
+import { Calendar } from "lucide-react";
 
 export default function Page() {
   const [periode, setPeriode] = useState(1); // default bulan / filter
@@ -44,8 +45,8 @@ export default function Page() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <h1 className="text-3xl font-bold tracking-tight text-gray-800">
-          Riwayat Kehadiran
+        <h1 className="text-3xl font-bold flex items-center gap-2 tracking-tight text-gray-800">
+          <Calendar className="w-7 h-7"/> Riwayat Kehadiran
         </h1>
 
         {/* Ringkasan Kehadiran */}

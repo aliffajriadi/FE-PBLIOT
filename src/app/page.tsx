@@ -22,6 +22,8 @@ import {
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import { motion } from "framer-motion"
+import Link from "next/link"
 
 // Header Component
 const Header = () => {
@@ -60,23 +62,23 @@ const Header = () => {
 
           <nav className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
                 className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
-          <button
-            onClick={() => router.push("/login")}
+          <Link
+          href="/login"
             className="hidden md:flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground rounded-full text-sm font-semibold hover:opacity-90 transition-all hover:shadow-lg hover:shadow-primary/25"
           >
             Login
             <ArrowRight className="w-4 h-4" />
-          </button>
+          </Link>
 
           <button
             className="md:hidden p-2 text-foreground hover:bg-muted rounded-lg transition-colors"
@@ -120,6 +122,11 @@ const Hero = () => {
       id="home"
       className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-gradient-to-b from-primary/5 to-background"
     >
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        >
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse" />
@@ -208,6 +215,7 @@ const Hero = () => {
           </div>
         </div>
       </div>
+      </motion.div>
     </section>
   )
 }

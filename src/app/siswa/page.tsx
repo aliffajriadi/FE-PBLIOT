@@ -2,24 +2,50 @@
 
 import Header from "./components/layout/layout";
 import RingkasanHariIni from "./components/dashboard/RingkasanHariIni";
-import JadwalHariIni from "./components/dashboard/JadwalHariIni";
 import StatistikKehadiran from "./components/dashboard/StatistikKehadiran";
+import { motion } from "framer-motion";
+import LogsAktifitas from "./components/dashboard/LogsAktifitas";
+import { Button } from "@/components/ui/button";
+import { User, Calendar } from "lucide-react";
+import Link from "next/link";
+import { House } from "lucide-react";
 
 export default function SiswaPage() {
   return (
     <Header>
-      <div className="p-6 space-y-5">
-        <h1 className="text-2xl font-bold text-gray-800">Dashboard Siswa</h1>
+      <motion.div
+        className="space-y-10"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        <div className="space-y-5">
+          <h1 className="text-3xl font-bold flex items-center gap-2 text-gray-800"><House className="w-7 h-7"/> Dashboard Siswa</h1>
 
-        {/* Ringkasan Kehadiran Hari Ini */}
-        <RingkasanHariIni />
+          {/* Ringkasan Kehadiran Hari Ini */}
+          <RingkasanHariIni />
 
-        {/* Jadwal Hari Ini */}
-        <JadwalHariIni />
+          {/* Statistik Kehadiran */}
+          <StatistikKehadiran />
 
-        {/* Statistik Kehadiran */}
-        <StatistikKehadiran />
-      </div>
+          {/* Jadwal Hari Ini */}
+          <LogsAktifitas />
+
+          <div className="flex gap-4 mb-7">
+            <Link href="/siswa/riwayat" className="flex-1">
+              <Button className="w-full py-8 flex items-center justify-center gap-2">
+                <Calendar /> Riwayat Kehadiran
+              </Button>
+            </Link>
+
+            <Link href="/siswa/pengaturan" className="flex-1">
+              <Button className="w-full py-8 flex items-center justify-center gap-2">
+                <User /> Pengaturan Profile
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </motion.div>
     </Header>
   );
 }

@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createUser, getUsers, updateUser, updatePhoto, updatePasswordProfile, searchUser, updateProfile, deleteUser, getUserById,getCurrentUser, getUserParams, statistikSiswaAbsensiProfile  } from "@/lib/api/user";
+import { createUser, logsActivity, getUsers, updateUser, updatePhoto, updatePasswordProfile, searchUser, updateProfile, deleteUser, getUserById,getCurrentUser, getUserParams, statistikSiswaAbsensiProfile  } from "@/lib/api/user";
 import { CreateUserPayload, UserUpdatePassword } from "@/types/user";
 import { toast } from "sonner";
+
 
 export const useUsers = () => {
   return useQuery({
@@ -103,7 +104,7 @@ export const useCurrentUser = () => {
    return useQuery({
     queryKey: ["currentUser"],
     queryFn: () => getCurrentUser(), 
-    staleTime: 1000 * 60,
+    staleTime: 1000 * 180,
   });
 };
 
@@ -140,6 +141,7 @@ export const useUpdateProfile = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+      queryClient.invalidateQueries({ queryKey: ["logs-activity"] });
     },
 
     onError: (e) => {
@@ -150,11 +152,12 @@ export const useUpdateProfile = () => {
 };
 
 export const useUpdatePasswordProfile = () => {
-
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: (data: UserUpdatePassword) => updatePasswordProfile(data), // panggil API
     onSuccess: () => {
       toast.success("Password berhasil diperbarui");
+      qc.invalidateQueries({ queryKey: ["logs-activity"] });
     },
     onError: () => {
       toast.error("Gagal update password");
@@ -168,5 +171,13 @@ export const useStatistikAbsensiSiswa = () => {
     queryKey: ["statistikSiswaAbsensiProfile"],
     queryFn: statistikSiswaAbsensiProfile,
     staleTime: 1000 * 60,
+  });
+}
+
+export const useLogsActivity = (page: number, limit: number) => {
+  return useQuery({
+    queryKey: ["logs-activity", page, limit],
+    queryFn: () => logsActivity(page, limit),
+    staleTime: 1000 * 100,
   });
 }
