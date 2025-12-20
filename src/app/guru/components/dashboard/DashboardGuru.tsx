@@ -2,7 +2,7 @@
 
 import GreetingCard from "./GreetingCard";
 import RealTimeMonitor from "./RealTimeMonitor";
-import TeachingSchedule from "./TeachingSchedule";
+import RecentActivity from "./TeachingSchedule";
 import StudentTable from "./StudentTable";
 import { useState } from "react";
 
@@ -27,7 +27,7 @@ export default function DashboardGuru() {
         </div>
 
         <div>
-          <TeachingSchedule />
+          <RecentActivity />
         </div>
       </div>
       <StudentTable selectedClass={selectedClass} />

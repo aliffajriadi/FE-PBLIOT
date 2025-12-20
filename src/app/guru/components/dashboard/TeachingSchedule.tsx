@@ -1,43 +1,89 @@
-export default function TeachingSchedule() {
-  const schedules = [
-    { time: "08:00 - 09:30", subject: "Matematika - XII A", students: 32 },
-    { time: "09:30 - 11:00", subject: "Matematika - XII B", students: 30 },
-    { time: "12:30 - 14:30", subject: "Matematika - XII C", students: 31 },
-    { time: "14:45 - 16:15", subject: "Matematika - XII D", students: 28 },
+import React from 'react';
+import { Activity, Clock } from "lucide-react"; 
+
+export default function RecentActivity() {
+  const activities = [
+    { id: 1, name: "Siti Aminah", class: "Kelas XII A", initials: "SA", status: "Terlambat", time: "07:45", type: "late" },
+    { id: 2, name: "Budi Santoso", class: "Kelas XII A", initials: "BS", status: "Hadir", time: "07:15", type: "present" },
+    { id: 3, name: "Dewi Sartika", class: "Kelas XII A", initials: "DS", status: "Hadir", time: "07:10", type: "present" },
+    { id: 4, name: "Ahmad Dahlan", class: "Kelas XII A", initials: "AD", status: "Hadir", time: "07:05", type: "present" },
+    { id: 5, name: "Rudi Hartono", class: "Kelas XII A", initials: "RH", status: "Hadir", time: "07:00", type: "present" },
+    { id: 6, name: "Rina Wati", class: "Kelas XII A", initials: "RW", status: "Hadir", time: "06:55", type: "present" },
+    { id: 7, name: "Eko Prasetyo", class: "Kelas XII A", initials: "EP", status: "Hadir", time: "06:50", type: "present" },
+    { id: 8, name: "Dina Mariana", class: "Kelas XII A", initials: "DM", status: "Hadir", time: "06:45", type: "present" },
   ];
 
-  return (
-    <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 flex flex-col min-h-[300px] max-w-md">
-      <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 text-primary-600"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-          <path d="M16 2v4M8 2v4M3 10h18" />
-        </svg>
-        Jadwal Mengajar Hari Ini
-      </h2>
+  const getStatusStyle = (type: string) => {
+    switch (type) {
+      case "late": return "bg-red-50 text-red-600 border-red-200";
+      case "present": return "bg-emerald-50 text-emerald-600 border-emerald-200";
+      default: return "bg-gray-50 text-gray-600 border-gray-200";
+    }
+  };
 
-      {/* Daftar jadwal */}
-      <ul className="divide-y divide-gray-200 flex-grow overflow-y-auto">
-        {schedules.map(({ time, subject, students }) => (
-          <li
-            key={subject}
-            className="flex justify-between items-center py-3 transition-colors duration-150 hover:bg-indigo-50 rounded-md px-2"
+  const getDotColor = (type: string) => {
+    switch (type) {
+      case "late": return "bg-red-500";
+      case "present": return "bg-emerald-500";
+      default: return "bg-gray-500";
+    }
+  };
+
+  return (
+    // PERBAIKAN DI SINI:
+    // Gunakan h-[300px] (Fixed Height) agar sama persis dengan min-h kartu sebelah.
+    // Jangan gunakan h-full agar tidak melar tak terkendali.
+    <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 flex flex-col h-[300px] w-full">
+      
+      {/* Header: flex-none agar tidak gepeng */}
+      <div className="flex justify-between items-center mb-4 flex-none">
+        <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+          <Activity className="w-6 h-6 text-primary-600" />
+          Aktivitas Terkini
+        </h2>
+        <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded animate-pulse">
+          LIVE
+        </span>
+      </div>
+
+      {/* List Area:
+          1. flex-1: Mengisi sisa ruang (dari 300px dikurangi header).
+          2. overflow-y-auto: Scrollbar muncul DI SINI jika kontennya banyak.
+          3. min-h-0: Mencegah flex item kebablasan keluar container.
+      */}
+      <div className="flex flex-col gap-3 flex-1 overflow-y-auto pr-2 custom-scrollbar min-h-0">
+        {activities.map((item) => (
+          <div 
+            key={item.id} 
+            className="flex items-center justify-between p-3 border border-gray-200 rounded-xl hover:shadow-sm transition-shadow bg-white group shrink-0"
           >
-            <span className="text-gray-800 font-medium whitespace-nowrap">{time}</span>
-            <span className="text-primary-600 font-semibold cursor-pointer hover:underline">
-              {subject}
-            </span>
-            <span className="text-xs text-gray-400 whitespace-nowrap">{students} siswa</span>
-          </li>
+            {/* KIRI */}
+            <div className="flex items-center gap-3 overflow-hidden">
+              <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-semibold text-sm shrink-0">
+                {item.initials}
+              </div>
+              <div className="min-w-0">
+                <h3 className="font-bold text-gray-800 text-sm truncate group-hover:text-primary-600 transition-colors">
+                  {item.name}
+                </h3>
+                <p className="text-xs text-gray-500 truncate">{item.class}</p>
+              </div>
+            </div>
+
+            {/* KANAN */}
+            <div className="flex flex-col items-end gap-1 shrink-0 ml-2">
+              <div className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[10px] font-bold uppercase tracking-wide ${getStatusStyle(item.type)}`}>
+                <span className={`w-1.5 h-1.5 rounded-full ${getDotColor(item.type)}`}></span>
+                {item.status}
+              </div>
+              <div className="flex items-center gap-1 text-xs text-gray-400 font-medium">
+                <Clock className="w-3 h-3" />
+                {item.time}
+              </div>
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
