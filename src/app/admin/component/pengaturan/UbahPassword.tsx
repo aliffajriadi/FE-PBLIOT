@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Lock, Save, AlertCircle, CheckCircle } from "lucide-react";
 import { useUpdatePasswordProfile } from "@/lib/hooks/useUser";
 import { UserUpdatePassword } from "@/types/user";
+import { AxiosError } from "axios";
 
 // Notifikasi
 const Notification = ({ type, text }: { type: "success" | "error"; text: string }) => (
@@ -23,7 +24,17 @@ const Notification = ({ type, text }: { type: "success" | "error"; text: string 
 );
 
 // Input Password
-const PasswordInput = ({ label, placeholder, value, onChange }: { label: string; placeholder: string; value: string; onChange: (e:any)=>void }) => (
+const PasswordInput = ({
+  label,
+  placeholder,
+  value,
+  onChange,
+}: {
+  label: string;
+  placeholder: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}) => (
   <div className="flex-1">
     <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
     <input
@@ -62,16 +73,19 @@ export default function UbahPasswordAdmin() {
     };
 
     updatePassword.mutate(payload, {
-      onSuccess: () => {
-        setCurrentPassword(""); setNewPassword(""); setConfirmPassword("");
-        setMessage({ type: "success", text: "Password berhasil diubah!" });
-      },
-      onError: (error: any) => {
-        setMessage({ type: "error", text: error?.response?.data?.message || "Gagal update password" });
-      },
-    });
-  };
-
+        onSuccess: () => {
+            setCurrentPassword(""); setNewPassword(""); setConfirmPassword("");
+            setMessage({ type: "success", text: "Password berhasil diubah!" });
+        },
+        onError: (error: unknown) => {
+            let errorMessage = "Gagal update password";
+            if (error instanceof AxiosError) {
+            errorMessage = error.response?.data?.message || errorMessage;
+            }
+            setMessage({ type: "error", text: errorMessage });
+        },
+        });
+    };
   return (
     <div className="bg-white rounded-2xl p-6 md:p-10 shadow-2xl border border-gray-100 max-w-4xl mx-auto mt-6">
       {/* Header */}
@@ -87,11 +101,11 @@ export default function UbahPasswordAdmin() {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Grid: Horizontal untuk layar md+, vertical untuk mobile */}
         <div className="flex flex-col md:flex-row gap-4">
-          <PasswordInput label="Password Lama" placeholder="Masukkan password lama" value={currentPassword} onChange={e=>setCurrentPassword(e.target.value)} />
-          <PasswordInput label="Password Baru" placeholder="Minimal 6 karakter" value={newPassword} onChange={e=>setNewPassword(e.target.value)} />
+          <PasswordInput label="Password Lama" placeholder="Masukkan password lama" value={currentPassword} onChange={(e)=>setCurrentPassword(e.target.value)} />
+          <PasswordInput label="Password Baru" placeholder="Minimal 6 karakter" value={newPassword} onChange={(e)=>setNewPassword(e.target.value)} />
         </div>
         <div className="flex flex-col md:flex-row gap-4">
-          <PasswordInput label="Konfirmasi Password Baru" placeholder="Ketik ulang password baru" value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} />
+          <PasswordInput label="Konfirmasi Password Baru" placeholder="Ketik ulang password baru" value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)} />
         </div>
 
         <div className="flex justify-end pt-4">
