@@ -1,33 +1,42 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { OtpInput } from "./component/Otp-Input";
-import { Countdown } from "./component/Countdown";
+import { use, useState, useEffect } from "react";
+import { OtpInput } from "../component/Otp-Input";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { MoveLeft } from "lucide-react";
 import { toast } from "sonner";
-import { useLoading } from "@/components/LoadingContext";
+import { Countdown } from "./Countdown";
+import {
+  useResetPasswordConfirm,
+  useResetPassword,
+} from "@/lib/hooks/useResetPassword";
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
-export default function OtpVerificationPage() {
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+export default function OtpVerificationPage({ params }: PageProps) {
+  const searchParams = useSearchParams();
+  const nomorHp = searchParams.get(
+    "9914f2055abc6279922c878baffc62c469796a3629ccd9adf1e61347a744b3a"
+  );
+  const nomorInduk = searchParams.get("1e61347a744b3a");
+  const loginAs = searchParams.get("loginAs");
+  const resolvedParams = use(params);
+  const id = Number(resolvedParams.id);
+  const router = useRouter();
+
+  const resetPasswordMutation = useResetPassword();
+  const resetPasswordConfirmMutation = useResetPasswordConfirm();
+
   const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
-  const [countdown, setCountdown] = useState(180);
-  const [canResend, setCanResend] = useState(false);
   const [isNullForm, setIsNullForm] = useState(true);
-  const { showLoading, hideLoading } = useLoading();
 
   useEffect(() => {
     setIsNullForm(otp.some((digit) => digit === ""));
   }, [otp]);
-
-  useEffect(() => {
-    if (countdown > 0) {
-      const timer = setInterval(() => setCountdown((prev) => prev - 1), 1000);
-      return () => clearInterval(timer);
-    } else {
-      setCanResend(true);
-    }
-  }, [countdown]);
 
   const handleSubmit = async () => {
     const otpCode = otp.join("");
@@ -35,21 +44,40 @@ export default function OtpVerificationPage() {
       toast.error("Mohon lengkapi semua digit OTP!");
       return;
     }
-    //BUAT SIMULASI DOANG LEK, NNTI GANTI KE API NYA
-    showLoading();
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    hideLoading();
-    toast.info(`Kode OTP yang dimasukkan: ${otpCode}\n\nVerifikasi berhasil!`);
+    resetPasswordConfirmMutation.mutate(
+      {
+        id: id,
+        otp: otpCode,
+      },
+      {
+        onSuccess: (data) => {
+          toast.success("Verifikasi berhasil!");
+          router.push(`/ganti-password/${data}`);
+        },
+        onError: (data) => {
+          toast.error(data.message || "Gagal verifikasi OTP");
+        },
+      }
+    );
     setOtp(["", "", "", ""]);
   };
 
   const handleResendOtp = () => {
-    if (canResend) {
-      toast.success("Kode OTP baru telah dikirim ke WhatsApp Anda!");
-      setCountdown(180);
-      setCanResend(false);
-      setOtp(["", "", "", ""]);
-    }
+    resetPasswordMutation.mutate(
+      {
+        role: (loginAs || "").toLowerCase(),
+        ni: nomorInduk || "",
+        nohp: nomorHp || "",
+      },
+      {
+        onSuccess: () => {
+          toast.success("Kode OTP baru telah dikirim ke WhatsApp Anda!");
+        },
+        onError: (data) => {
+          toast.error(data.message || "Gagal mengirim OTP");
+        },
+      }
+    );
   };
 
   return (
@@ -73,17 +101,10 @@ export default function OtpVerificationPage() {
 
             <div>
               <div className="mb-4">
-                <label className="block text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">
-                  OTP
-                </label>
                 <OtpInput otp={otp} setOtp={setOtp} />
               </div>
 
-              <Countdown
-                countdown={countdown}
-                canResend={canResend}
-                onResend={handleResendOtp}
-              />
+              <Countdown onResend={handleResendOtp} />
 
               <button
                 disabled={isNullForm}

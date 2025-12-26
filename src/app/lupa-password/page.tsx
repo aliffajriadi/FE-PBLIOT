@@ -5,9 +5,8 @@ import React, { useState, ChangeEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { MoveLeft, ChevronDown } from "lucide-react";
 import Link from "next/link";
-import { useLoading } from "@/components/LoadingContext"; // ✅ gunakan loading global
+import { useResetPassword } from "@/lib/hooks/useResetPassword";
 import { useRouter } from "next/navigation";
-
 
 // ============================================
 // TIPE PROPS UNTUK SELECT FIELD
@@ -73,13 +72,12 @@ interface FormData {
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
+  const resetPasswordMutation = useResetPassword();
   const [formData, setFormData] = useState<FormData>({
     loginAs: "SISWA",
     nisn: "",
     phoneNumber: "",
   });
-
-  const { showLoading, hideLoading } = useLoading(); // 🔥 pakai global loading
 
   const handleInputChange =
     (field: keyof FormData) =>
@@ -104,22 +102,32 @@ export default function ForgotPasswordPage() {
       return;
     }
 
-    showLoading(); // ⏳ tampilkan loading global
-    await new Promise((resolve) => setTimeout(resolve, 2000)); // simulasi kirim OTP
-    hideLoading(); // ❌ tutup loading
-
-
-    // Reset form
-    setFormData({
-      loginAs: "SISWA",
-      nisn: "",
-      phoneNumber: "",
-    });
-    toast.success("Kode OTP telah dikirim ke WhatsApp Anda!");
-    router.push("/verify-otp");
+    resetPasswordMutation.mutate(
+      {
+        role: formData.loginAs.toLowerCase(),
+        nohp: phoneNumber,
+        ni: formData.nisn,
+      },
+      {
+        onSuccess: (data) => {
+          toast.success("Kode OTP telah dikirim ke WhatsApp Anda!");
+          // Reset form
+          setFormData({
+            loginAs: "SISWA",
+            nisn: "",
+            phoneNumber: "",
+          });
+          // Kirim ID user ke halaman verifikasi via URL query
+          router.push(`/verify-otp/${data.idUser}?9914f2055abc6279922c878baffc62c469796a3629ccd9adf1e61347a744b3a=${formData.phoneNumber}&1e61347a744b3a=${formData.nisn}&loginAs=${formData.loginAs}`);
+        },
+        onError: (data) => {
+          toast.error(data?.message || "Gagal mengirim OTP");
+        },
+      }
+    );
   };
 
-  const isNullForm = !formData.nisn || !formData.phoneNumber;
+  const isNullForm = !formData.nisn || !formData.phoneNumber || resetPasswordMutation.isPending;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-blue-50 to-indigo-100 flex flex-col">
@@ -138,7 +146,9 @@ export default function ForgotPasswordPage() {
               <h2 className="text-2xl md:text-3xl font-medium text-[#2F4C87] mb-1">
                 Lupa Password
               </h2>
-              <p className="text-sm text-muted-foreground">Ganti Password Anda dengan kode OTP yang dikirim ke WhatsApp</p>
+              <p className="text-sm text-muted-foreground">
+                Ganti Password Anda dengan kode OTP yang dikirim ke WhatsApp
+              </p>
             </div>
 
             <div>
@@ -161,7 +171,11 @@ export default function ForgotPasswordPage() {
                   type="text"
                   value={formData.nisn}
                   onChange={handleInputChange("nisn")}
-                  placeholder={formData.loginAs === "SISWA" ? "Masukkan NISN" : "Masukkan NIP"}
+                  placeholder={
+                    formData.loginAs === "SISWA"
+                      ? "Masukkan NISN"
+                      : "Masukkan NIP"
+                  }
                   className="w-full px-4 py-3 bg-gray-100 border-none rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
                 />
               </div>
@@ -192,7 +206,7 @@ export default function ForgotPasswordPage() {
                   isNullForm ? "opacity-50 cursor-not-allowed" : ""
                 } bg-[#2F4C87] text-white py-3.5 rounded-lg font-semibold text-lg hover:bg-[#253a6a] transform hover:-translate-y-0.5 transition-all duration-200 shadow-md hover:shadow-xl mt-2`}
               >
-                Kirim OTP
+                {resetPasswordMutation.isPending ? "Loading..." : "Kirim OTP"}
               </button>
 
               <Button asChild variant="link" className="mt-4 mx-auto">
