@@ -13,7 +13,7 @@ export default function AddTeacherPage() {
       <div className="mb-6">
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors mb-4"
+          className="flex items-center gap-2 text-gray-600 hover:text-primary transition-colors mb-4"
         >
           <ArrowLeft className="w-5 h-5" />
           <span className="font-medium">Kembali</span>

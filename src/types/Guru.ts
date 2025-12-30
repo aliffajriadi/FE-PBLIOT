@@ -5,9 +5,9 @@ export interface Teacher {
   name?: string;
   photo?: string;
   nohp: string;
-  rfid? : {
+  rfid?: {
     rfid: string;
-  }
+  };
   role: "guru" | "siswa" | "admin";
 }
 
@@ -49,4 +49,27 @@ export interface Absensi {
   masuk: string;
   keluar: string;
   kelas: Kelas;
+}
+
+export interface Student {
+  id: number;
+  name: string;
+  nisn?: string;
+  photo?: string;
+  status: "hadir" | "belum" | "terlambat";
+  absenMasuk?: string;
+  rfid?: {
+    rfid: string;
+  };
+}
+
+export interface Session {
+  id: number;
+  kelasNama: string;
+  masuk: string;
+  keluar: string;
+  expiredAt: string;
+  totalSiswa: number;
+  siswaHadir: number;
+  students: Student[];
 }

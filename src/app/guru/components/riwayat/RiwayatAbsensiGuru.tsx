@@ -1,68 +1,121 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-
-import FilterAbsensi from "./FilterAbsensi";
 import TableAbsensi from "./TableAbsensi";
+import { useKelasAjar } from "@/lib/hooks/useClass";
 
-// Data dummy, bisa diganti dengan props atau fetch data
-const historyData = [
-  { tanggal: "06/10/2025", nama: "Muhammad Yuki", kelas: "XII A", jamMasuk: "07:58", status: "Hadir" },
-  { tanggal: "06/10/2025", nama: "Muhammad Raihan", kelas: "XII A", jamMasuk: "08:15", status: "Terlambat" },
-  { tanggal: "06/10/2025", nama: "Alif Fajriadi", kelas: "XII A", jamMasuk: "-", status: "Tidak Masuk" },
-  { tanggal: "05/10/2025", nama: "Adi Nugraha", kelas: "XII A", jamMasuk: "07:59", status: "Hadir" },
-  { tanggal: "05/10/2025", nama: "Dian Permata", kelas: "X IPA 1", jamMasuk: "-", status: "Izin" },
-  { tanggal: "04/10/2025", nama: "Fajar Ramadan", kelas: "X IPS 2", jamMasuk: "08:01", status: "Terlambat" },
-  { tanggal: "04/10/2025", nama: "Gita Puspita", kelas: "X IPS 2", jamMasuk: "-", status: "Sakit" },
-];
+interface KelasAjar {
+  id: number;
+  masuk: string | null;  // Biasanya ISO string dari backend
+  keluar: string | null; // Biasanya ISO string dari backend
+  nama?: string;         // Nama ruangan atau kelas
+}
 
 export default function RiwayatAbsensiGuru() {
-  const [kelas, setKelas] = useState("");
+  const { data: kelasAjar, isLoading, isError } = useKelasAjar();
+
+  // State untuk filter
   const [nama, setNama] = useState("");
   const [tanggal, setTanggal] = useState("");
-  const [filteredData, setFilteredData] = useState(historyData);
 
-  const handleFilter = () => {
-    let filtered = historyData;
+  const historyData = useMemo(() => {
+    if (!kelasAjar || !Array.isArray(kelasAjar)) return [];
 
-    if (kelas) {
-      filtered = filtered.filter((item) => item.kelas === kelas);
-    }
-    if (nama) {
-      filtered = filtered.filter((item) =>
-        item.nama.toLowerCase().includes(nama.toLowerCase())
-      );
-    }
-    if (tanggal) {
-      filtered = filtered.filter((item) => item.tanggal === tanggal);
-    }
+    return kelasAjar.map((item: KelasAjar) => {
+      const dateMasuk = item.masuk ? new Date(item.masuk) : null;
+      const dateKeluar = item.keluar ? new Date(item.keluar) : null;
 
-    setFilteredData(filtered);
-  };
+      const tglCantik = dateMasuk 
+        ? dateMasuk.toLocaleDateString('id-ID', { 
+            day: '2-digit', month: 'short', year: 'numeric' 
+          }) 
+        : "-";
+
+      const jamMasuk = dateMasuk 
+        ? dateMasuk.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) 
+        : "-";
+      
+      const jamKeluar = dateKeluar 
+        ? dateKeluar.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) 
+        : "-";
+
+      let totalSesi = "-";
+      if (dateMasuk && dateKeluar) {
+        const diffInMins = Math.floor((dateKeluar.getTime() - dateMasuk.getTime()) / (1000 * 60));
+        totalSesi = diffInMins >= 60 
+          ? `${Math.floor(diffInMins / 60)}j ${diffInMins % 60}m` 
+          : `${diffInMins}m`;
+      }
+
+      return {
+        id: item.id,
+        tanggal: tglCantik,
+        ruangan: item.nama || "Tanpa Nama",
+        masuk: jamMasuk,
+        keluar: jamKeluar,
+        totalSesi: totalSesi,
+      };
+    });
+  }, [kelasAjar]);
+
+  const filteredData = useMemo(() => {
+    return historyData.filter((item) => {
+      const matchNama = item.ruangan.toLowerCase().includes(nama.toLowerCase());
+      const matchTanggal = item.tanggal.includes(tanggal);
+      return matchNama && matchTanggal;
+    });
+  }, [historyData, nama, tanggal]);
+
+  if (isLoading) return <div className="p-10 text-center animate-pulse text-gray-500">Memuat data absensi...</div>;
+  if (isError) return <div className="p-10 text-center text-red-500 font-semibold">Gagal mengambil data dari server.</div>;
 
   return (
     <motion.div
-      className="space-y-8"
+      className="space-y-6 p-4"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <h1 className="text-3xl font-bold tracking-tight text-gray-800">
-        Riwayat Absensi
-      </h1>
+      <header>
+        <h1 className="text-3xl font-bold tracking-tight text-gray-800">
+          Riwayat Absensi
+        </h1>
+        <p className="text-gray-500">Data kehadiran pengajaran Anda.</p>
+      </header>
 
-      <FilterAbsensi
-        kelas={kelas}
-        setKelas={setKelas}
-        nama={nama}
-        setNama={setNama}
-        tanggal={tanggal}
-        setTanggal={setTanggal}
-        onFilter={handleFilter}
-      />
+      {/* --- BAGIAN FILTER (Baru ditambahkan) --- */}
+      <div className="flex flex-col md:flex-row gap-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
+        <div className="flex-1">
+          <label className="text-xs font-semibold uppercase text-gray-400 mb-1 block">Cari Ruangan</label>
+          <input 
+            type="text"
+            placeholder="Contoh: Lab Komputer..."
+            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none text-sm"
+            value={nama}
+            onChange={(e) => setNama(e.target.value)}
+          />
+        </div>
+        <div className="w-full md:w-48">
+          <label className="text-xs font-semibold uppercase text-gray-400 mb-1 block">Filter Tanggal</label>
+          <input 
+            type="text"
+            placeholder="Contoh: 24 Des"
+            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none text-sm"
+            value={tanggal}
+            onChange={(e) => setTanggal(e.target.value)}
+          />
+        </div>
+      </div>
+      {/* -------------------------------------- */}
 
-      <TableAbsensi data={filteredData} />
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        {filteredData.length > 0 ? (
+          <TableAbsensi data={filteredData} />
+        ) : (
+          <div className="p-10 text-center text-gray-400">Data tidak ditemukan.</div>
+        )}
+      </div>
     </motion.div>
   );
 }
