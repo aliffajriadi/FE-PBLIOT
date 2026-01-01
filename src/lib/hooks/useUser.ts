@@ -29,6 +29,7 @@ export const useCreateUser = () => {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["users"] });
+      qc.invalidateQueries({ queryKey: ["statistik-admin"] });
     },
     onError: (error: unknown) => {
       if (error instanceof Error) {

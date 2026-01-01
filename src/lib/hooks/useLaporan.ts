@@ -16,3 +16,11 @@ export const useLaporanAbsensiSiswa = (page: number, limit: number, periode: num
         staleTime: 1000 * 60,
     });
 }
+
+export const useStatistikAdmin = () => {
+    return useQuery({
+        queryKey: ["statistik-admin"],
+        queryFn: laporan.getStatistikAdmin,
+        staleTime: 1000 * 60,
+    });
+}

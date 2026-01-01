@@ -2,7 +2,7 @@
 
 import { Users, GraduationCap, Building2 } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
-import { useUserQuery } from '@/lib/hooks/useUser';
+import { useStatistikAdmin } from '@/lib/hooks/useLaporan';
 
 interface StatisticCardProps {
   title: string;
@@ -28,18 +28,14 @@ function StatisticCard({ title, value, icon: Icon, gradient }: StatisticCardProp
 }
 
 export default function SummaryCards() {
-  const siswaQuery = useUserQuery(`1`, `1`, "siswa");
-  const guruQuery = useUserQuery(`1`, `1`, "guru");
 
-  // Ambil total atau pakai placeholder "-"
-  const totalSiswa = siswaQuery.data?.total ?? "-";
-  const totalGuru = guruQuery.data?.total ?? "-";
+  const { data } = useStatistikAdmin();
 
   const stats = [
-    { title: 'Total Siswa', value: totalSiswa.toString(), icon: Users, gradient: 'bg-gradient-to-br from-blue-500 to-blue-600' },
-    { title: 'Total Guru', value: totalGuru.toString(), icon: GraduationCap, gradient: 'bg-gradient-to-br from-teal-500 to-teal-600' },
-    { title: 'Total Kelas', value: '5', icon: Building2, gradient: 'bg-gradient-to-br from-orange-500 to-orange-600' },
-    { title: 'Total Siswa', value: '150', icon: Users, gradient: 'bg-gradient-to-br from-indigo-500 to-indigo-600' },
+    { title: 'Total Siswa', value: data?.totalSiswa.toString() || "-", icon: Users, gradient: 'bg-gradient-to-br from-blue-500 to-blue-600' },
+    { title: 'Total Guru', value: data?.totalGuru.toString() || "-", icon: GraduationCap, gradient: 'bg-gradient-to-br from-teal-500 to-teal-600' },
+    { title: 'Total Kelas', value: data?.totalKelas.toString() || "-", icon: Building2, gradient: 'bg-gradient-to-br from-orange-500 to-orange-600' },
+    { title: 'Total Absensi', value: data?.totalAbsensi.toString() || "-", icon: Users, gradient: 'bg-gradient-to-br from-indigo-500 to-indigo-600' },
   ];
 
   return (

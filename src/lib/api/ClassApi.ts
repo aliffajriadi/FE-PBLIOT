@@ -17,3 +17,8 @@ export const getActiveSession = async () => {
   const res = await api.get(`/kelas/realtime-sesi`, { withCredentials: true });
   return res.data;
 }
+
+export const getLaporan = async (periode: number, kelas: string, tanggal: string) => {
+  const res = await api.get(`/laporan/absensi?periode=${periode}&kelas=${kelas}&tanggal=${tanggal}`, { withCredentials: true });
+  return res;
+}

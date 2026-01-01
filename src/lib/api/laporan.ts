@@ -16,3 +16,8 @@ export const getAbsensiSiswa = async (page: number, limit: number, periode: numb
 }
 
 export const baseurl = process.env.NEXT_PUBLIC_API_URL
+
+export const getStatistikAdmin = async () => {
+    const res = await api.get("/laporan/statistik", { withCredentials: true });
+    return res.data.data;
+}

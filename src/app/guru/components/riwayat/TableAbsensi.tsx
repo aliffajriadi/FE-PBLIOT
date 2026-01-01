@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CalendarDays, Eye } from "lucide-react";
+import { Eye } from "lucide-react";
 
 interface AbsensiData {
   id: number;
@@ -22,7 +22,6 @@ export default function TableAbsensi({ data }: TableAbsensiProps) {
       {/* Header tabel */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h3 className="text-xl font-semibold text-gray-800 flex items-center space-x-2">
-          <CalendarDays className="w-6 h-6 text-indigo-600" />
           <span>Daftar Sesi Kelas</span>
         </h3>
       </div>
@@ -64,7 +63,7 @@ export default function TableAbsensi({ data }: TableAbsensiProps) {
                   <td className="p-4 text-center">
                     <Link 
                       href={`/guru/riwayat/${item.id}`}
-                      className="inline-flex items-center space-x-1 text-primary hover:text-indigo-800 font-medium transition-colors"
+                      className="inline-flex items-center space-x-1 text-primary hover:scale-110 transition-all hover:text-indigo-800 font-medium"
                     >
                       <Eye size={14} />
                       <span>Lihat</span>
