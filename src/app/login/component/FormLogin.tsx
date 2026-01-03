@@ -158,6 +158,7 @@ const LoginForm: React.FC = () => {
           alt="Logo SmartPresence"
           width={250}
           height={250}
+          className="mb-4"
           priority
         />
 
