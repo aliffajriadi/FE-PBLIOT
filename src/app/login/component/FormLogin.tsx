@@ -152,7 +152,7 @@ const LoginForm: React.FC = () => {
 
   return (
     <div className="w-full max-w-md mx-auto px-4">
-      <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-10">
+      <div className="bg-white rounded-3xl shadow-2xl justify-center items-center flex flex-col p-8 md:p-10">
         <Image
           src="/LOGO.png"
           alt="Logo SmartPresence"
