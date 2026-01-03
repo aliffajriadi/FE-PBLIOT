@@ -32,3 +32,11 @@ export const useActiveSession = () => {
     refetchIntervalInBackground: true, // Tetap update meskipun tab tidak fokus
   });
 };
+
+export const useAllKelas = () => {
+  return useQuery({
+    queryKey: ["all-kelas"],
+    queryFn: () => classApi.getAllKelas(),
+    staleTime: 1000 * 60,
+  });
+};

@@ -76,7 +76,6 @@ export default function TableSiswa({
       {isLoading && (
         <div className="absolute inset-0 rounded-full bg-gray-200 animate-pulse" />
       )}
-
       <Image
         src={src}
         alt={finalName}
