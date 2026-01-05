@@ -5,9 +5,9 @@ import { UserPlus, GraduationCap, BookOpen } from 'lucide-react';
 
 export default function QuickActions() {
   const actions = [
-    { label: '+ Tambah Siswa', icon: UserPlus, href: '/admin/siswa' },
-    { label: '+ Tambah Guru', icon: GraduationCap, href: '/admin/guru' },
-    { label: '+ Buat Kelas', icon: BookOpen, href: '/admin/kelas' },
+    { label: '+ Tambah Siswa', icon: UserPlus, href: '/admin/data-siswa/add' },
+    { label: '+ Tambah Guru', icon: GraduationCap, href: '/admin/data-guru/add' },
+    { label: 'Laporan', icon: BookOpen, href: '/admin/laporan' },
   ];
 
   return (
