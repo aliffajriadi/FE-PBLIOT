@@ -4,7 +4,11 @@ import { ChevronLeft, ChevronRight, Edit2, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Teacher } from "@/types/Guru";
+import { useDeleteUser } from "@/lib/hooks/useUser";
 import { useState } from "react";
+import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
+import { getErrorMessage } from "@/utils/getErrorMessage";
+import { toast } from "sonner";
 
 interface TeachersTableProps {
   data: Teacher[];
@@ -14,6 +18,7 @@ interface TeachersTableProps {
   totalData: number;
   limit: number;
 }
+
 
 export default function TeachersTable({
   data,
@@ -25,13 +30,39 @@ export default function TeachersTable({
 }: TeachersTableProps) {
   const router = useRouter();
 
-  if (!data || data.length === 0) {
-    return (
-      <div className="text-center py-12 text-gray-500">
-        Tidak ada data guru
-      </div>
-    );
-  }
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const deleteUserMutation = useDeleteUser();
+
+  const handleConfirmDelete = (id: number) => {
+    setSelectedId(id);
+    setShowModal(true);
+  };
+
+  const handleDelete = () => {
+    if (!selectedId) return;
+
+    deleteUserMutation.mutate(selectedId, {
+      onSuccess: () => {
+        setShowModal(false);
+        setSelectedId(null);
+        toast.success("Data siswa berhasil dihapus");
+
+        // jika halaman kosong setelah hapus, mundur 1 halaman
+        if (data.length === 1 && page > 1) {
+          onPageChange(page - 1);
+        } else {
+          onPageChange(page); // refresh halaman sekarang
+        }
+      },
+      onError: (err: unknown) => {
+        const msg = getErrorMessage(err);
+        toast.error("Gagal menghapus siswa", { description: msg });
+      },
+    });
+  };
+  
 
   const startIndex = (page - 1) * limit;
   const endIndex = startIndex + data.length;
@@ -124,6 +155,7 @@ export default function TeachersTable({
                     </button>
 
                     <button
+                      onClick={() => handleConfirmDelete(Number(guru.id))}
                       className="p-2 hover:bg-red-50 rounded-lg transition-colors group"
                       title="Hapus"
                     >
@@ -184,6 +216,16 @@ export default function TeachersTable({
           </button>
         </div>
       </div>
+
+
+       {/* Modal Konfirmasi */}
+            <ConfirmDeleteModal
+              open={showModal}
+              onClose={() => setShowModal(false)}
+              onConfirm={handleDelete}
+              title="Hapus Data Siswa"
+              message="Apakah kamu yakin ingin menghapus data siswa ini? Tindakan ini tidak dapat dibatalkan."
+            />
     </>
   );
 }
