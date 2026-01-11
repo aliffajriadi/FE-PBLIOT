@@ -47,7 +47,7 @@ export default function TeachersTable({
       onSuccess: () => {
         setShowModal(false);
         setSelectedId(null);
-        toast.success("Data siswa berhasil dihapus");
+        toast.success("Data Guru berhasil dihapus");
 
         // jika halaman kosong setelah hapus, mundur 1 halaman
         if (data.length === 1 && page > 1) {
@@ -58,7 +58,7 @@ export default function TeachersTable({
       },
       onError: (err: unknown) => {
         const msg = getErrorMessage(err);
-        toast.error("Gagal menghapus siswa", { description: msg });
+        toast.error("Gagal menghapus Guru", { description: msg });
       },
     });
   };
@@ -223,8 +223,8 @@ export default function TeachersTable({
               open={showModal}
               onClose={() => setShowModal(false)}
               onConfirm={handleDelete}
-              title="Hapus Data Siswa"
-              message="Apakah kamu yakin ingin menghapus data siswa ini? Tindakan ini tidak dapat dibatalkan."
+              title="Hapus Data Guru"
+              message="Apakah kamu yakin ingin menghapus data Guru ini? Tindakan ini tidak dapat dibatalkan."
             />
     </>
   );
